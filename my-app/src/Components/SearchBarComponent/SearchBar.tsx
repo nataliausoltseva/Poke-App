@@ -33,18 +33,16 @@ function SearchBar(props: ISearchBarProps) {
                 <TextField
                     required
                     id="outlined-required"
-                    label="Search"
+                    label="Enter pokemon's name (lowercase)"
                     variant="outlined"
                     error={HasFocus && SearchQuery === ""}
                     onClick={() => setHasFocus(true)}
                     value={SearchQuery}
                     onChange={e => handleSearchQueryChange(e.target.value)}
                 />
-            </Grid>
 
-            <Grid item xs={6} sm={3}>
                 <Button variant="contained" color="primary" onClick={handleSubmit}>
-                    Submit
+                    Search
                 </Button>
             </Grid>
         </Grid>

@@ -54,46 +54,40 @@ function MediaGrid(props: IMediaGridProps) {
             })
     });
 
-    useEffect(() => {
-        
-        fetch('https://pokeapi.co/api/v2/pokemon/' + props.SearchQuery, {
-            headers : { 
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-       }
-        } ).then((response) => response.json())
-            .then(response => {  
-                if(response.status <200 || response.status>=300){
-                    alert("Please enter an English word right (without a space, digits and symbols).");
-                    return Promise.reject("Not a right form of word")
-                }         
-                console.log(response); 
+    useEffect(()=> {
+        fetch('https://pokeapi.co/api/v2/pokemon/' + props.SearchQuery,{
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        }).then(response => {
+            if(response.status < 200 || response.status >= 300) {
+                alert("Please enter a correct pokemon's name (without a space, digits and symbols but also in lowercase as well).");
+                return Promise.reject("Incorrect pokemon's name")
+            }else {
+                return response.json();
+            }
+            
+            }).then(data => {  
+     
+                console.log(data); 
                 
-                for(var i=0; i< response.abilities.length;i++){
-                    abilitiesArray.push(response.abilities[i].ability);
+                for(var i=0; i< data.abilities.length;i++){
+                    abilitiesArray.push(data.abilities[i].ability);
                 }
                 setPokemonAbilities(abilitiesArray);
                 
-                for(var j=0; j< response.types.length;j++){
-                    typesArray.push(response.types[j].type);
+                for(var j=0; j< data.types.length;j++){
+                    typesArray.push(data.types[j].type);
                 }
                 setPokemonTypes(typesArray);
 
-                setPokeID(response.id);
-            
-
-            }).catch(reason => {
-                if(reason.response){
-                    console.log(reason.response);
-                }
-            })
-            
-            // eslint-disable-next-line 
-    }, [props.SearchQuery]);
-  
-    //const back_default = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/${pokeID}.png`;
+                setPokeID(data.id);
+        
+    });
+    // eslint-disable-next-line
+}, [props.SearchQuery]);
     const front_default = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokeID}.png`;
-    //const back_shiny = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/${pokeID}.png`;
     const front_shiny = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${pokeID}.png`;
 
     const kanto = [];

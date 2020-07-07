@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './MediaGrid.css';
 import Card from 'react-bootstrap/Card';
 import 'bootstrap/dist/css/bootstrap.css';
+import ProgressBar from 'react-bootstrap/ProgressBar';
 import { Grid, CardContent, Typography, makeStyles } from '@material-ui/core';
 
 interface Abilities {
@@ -30,6 +31,7 @@ const useStyles = makeStyles({
     },
   });
 
+  
 function MediaGrid(props: IMediaGridProps) {
     
     const classes = useStyles();
@@ -37,6 +39,9 @@ function MediaGrid(props: IMediaGridProps) {
     const [pokemonAbilities, setPokemonAbilities] = useState<Abilities[]>([{name:"", url:""}])
     const [pokemonTypes, setPokemonTypes] = useState<Types[]>([{name:"", url:""}])
     const [pokeID, setPokeID] = useState(0);
+    const [pokeWeight, setPokeWeight] = useState(0);
+    const [pokeHeight, setPokeHeight] = useState(0);
+    const [pokeCaptureRate, setPokeCaptureRate] = useState(0);
     let abilitiesArray: any[] = [];
     const typesArray: any[] = [];
     // eslint-disable-next-line
@@ -81,11 +86,36 @@ function MediaGrid(props: IMediaGridProps) {
                     typesArray.push(data.types[j].type);
                 }
                 setPokemonTypes(typesArray);
-
                 setPokeID(data.id);
+                let heightpo = data.height /10;
+                setPokeHeight(heightpo);
+                let weightpo = data.weight/10;
+                setPokeWeight(weightpo);
         
     });
     // eslint-disable-next-line
+}, [props.SearchQuery]);
+
+useEffect(()=> {
+    fetch('https://pokeapi.co/api/v2/pokemon-species/' + props.SearchQuery,{
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+    }).then(response => {
+        if(response.status < 200 || response.status >= 300) {
+            alert("Please enter a correct pokemon's name (without a space, digits and symbols but also in lowercase as well).");
+            return Promise.reject("Incorrect pokemon's name")
+        }else {
+            return response.json();
+        }
+        
+        }).then(data => {  
+            setPokeCaptureRate(data.capture_rate);
+            
+    
+});
+// eslint-disable-next-line
 }, [props.SearchQuery]);
     const front_default = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokeID}.png`;
     const front_shiny = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${pokeID}.png`;
@@ -165,6 +195,8 @@ function MediaGrid(props: IMediaGridProps) {
         }
     }
 
+    const progressCaptureRate = <ProgressBar now={pokeCaptureRate} label={`${pokeCaptureRate}%`}/>
+
     return (
         <div id="div1">
             <h1  style={{textTransform:"capitalize"}}>{props.SearchQuery}</h1>
@@ -216,7 +248,7 @@ function MediaGrid(props: IMediaGridProps) {
                     <CardContent>
                         
                         <Typography variant="h5" component="h2">
-                        Types
+                        Type
                         </Typography>
                         
                         <Typography variant="body2" component="p">
@@ -224,6 +256,33 @@ function MediaGrid(props: IMediaGridProps) {
                         <li key={i}>{item.name}</li>)}
                         
                         </Typography>
+                    </CardContent>
+                </Card>
+                <br/>
+                <Card className={classes.root}>
+                    <CardContent>
+                        
+                        <Typography variant="h5" component="h2">
+                        Stats
+                        </Typography>
+                        
+                        <Typography variant="body2" component="p">
+                        Height: {pokeHeight} m
+                        </Typography>
+                        <Typography variant="body2" component="p">
+                        Weight: {pokeWeight} kg
+                        </Typography>
+                    </CardContent>
+                </Card>
+                <br/>
+                <Card >
+                    <CardContent>
+                        
+                        <Typography variant="h5" component="h2">
+                        Capture rate
+                        </Typography>
+                        {progressCaptureRate}
+                        
                     </CardContent>
                 </Card>
                 </div>

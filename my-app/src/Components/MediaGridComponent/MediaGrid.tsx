@@ -1,88 +1,106 @@
-import React, { useState, useEffect, useRef } from 'react';
-///import ImageCard from '../ImageCardComponent/ImageCard';
+import React, { useState, useEffect } from 'react';
 import './MediaGrid.css';
-import { ListItemSecondaryAction } from '@material-ui/core';
-//import { Grid } from '@material-ui/core';
-//import Card from '@material-ui/core/Card';
 
 interface Abilities {
-    abilities: any[];
+    name: string;
+    url: string;
 }
 interface Types {
-    types: any[];
+    name: string;
+    url: string;
 }
-interface ImageBackNormal {
-    backNormal: "";
-}
-interface ImageFrontNormal {
-    frontNormal: "";
-}
-interface ImageBackShiny {
-    backShiny: "";
-}
-interface ImageFrontShiny {
-    frontShiny: "";
-}
-
 interface IMediaGridProps {
     SearchQuery: (string | null);
 }
 function MediaGrid(props: IMediaGridProps) {
-    // eslint-disable-next-line
-    //const [pokemonAbilities, setPokemonAbilities] = useState<Abilities[]>([{abilities: []}]);
-    const [pokemonAbilities, setPokemonAbilities] = useState([{}]);
-    //const [pokemonTypes, setPokemonTypes] = useState<Types[]>([{types: []}]);
-    const [pokemonTypes, setPokemonTypes] = useState([{}]);
-    const [pokemonBackNormal, setPokemonBackNormal] = useState([("")])
-    const [pokemonFrontNormal, setPokemonFrontNormal] = useState<ImageFrontNormal[]>([{frontNormal: ''}]);
-    const [pokemonBackShiny, setPokemonBackShiny] = useState<ImageBackShiny[]>([{backShiny: ""}]);
-    const [pokemonFrontShiny, setPokemonFrontShiny] = useState<ImageFrontShiny[]>([{frontShiny: ''}]);
-    const [pokeID, setPokeID] = useState([{}]);
+    
+    const [pokemonAbilities, setPokemonAbilities] = useState<Abilities[]>([{name:"", url:""}])
+    const [pokemonTypes, setPokemonTypes] = useState<Types[]>([{name:"", url:""}])
+    const [pokeID, setPokeID] = useState(0);
     let abilitiesArray: any[] = [];
     const typesArray: any[] = [];
-    //let pokemonBackNormal = ""
+    // eslint-disable-next-line
+    const[arrayOfPokemongs, setArrayOfPokemons] = useState([{}]);
+    let pokemons: any[] = [];
+    
     useEffect(() => {
-        fetch('https://pokeapi.co/api/v2/pokemon/' + props.SearchQuery)
-            .then(response => response.json())
-            .then(response => {               
+        fetch('https://pokeapi.co/api/v2/pokemon?limit=810&offset=0')
+            .then(res => res.json())
+            .then(res => {            
+                for(var count = 0; count < res.results.length; count++) {
+                    pokemons.push(res.results[count]);
+                }
+                setArrayOfPokemons(pokemons);
+            })
+    });
+
+    useEffect(() => {
+        
+        fetch('https://pokeapi.co/api/v2/pokemon/' + props.SearchQuery, {
+            headers : { 
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+       }
+        } ).then((response) => response.json())
+            .then(response => {  
+                if(response.status <200 || response.status>=300){
+                    alert("Please enter an English word right (without a space, digits and symbols).");
+                    return Promise.reject("Not a right form of word")
+                }         
                 console.log(response); 
+                
                 for(var i=0; i< response.abilities.length;i++){
-                    abilitiesArray.push(response.abilities[i].ability.name);
+                    abilitiesArray.push(response.abilities[i].ability);
                 }
                 setPokemonAbilities(abilitiesArray);
-
+                
                 for(var j=0; j< response.types.length;j++){
-                    typesArray.push(response.types[j].type.name);
+                    typesArray.push(response.types[j].type);
                 }
                 setPokemonTypes(typesArray);
-                
-                setPokemonBackNormal(response.sprites.back_default);
-                setPokemonFrontNormal(response.sprites.front_default);
-                setPokemonBackShiny(response.sprites.back_shiny);
-                setPokemonFrontShiny(response.sprites.front_shiny);
-                setPokeID(response.id);
 
+                setPokeID(response.id);
+            
+
+            }).catch(reason => {
+                if(reason.response){
+                    console.log(reason.response);
+                }
             })
-            .catch(() => console.log("it didn't work")
-            );
-            //console.log(abilitiesArray);
+            
+            // eslint-disable-next-line 
     }, [props.SearchQuery]);
-    const image = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/${pokeID}.png`;
-    console.log(pokemonTypes);
+  
+    const back_default = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/${pokeID}.png`;
+    const front_default = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokeID}.png`;
+    const back_shiny = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/${pokeID}.png`;
+    const front_shiny = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${pokeID}.png`;
+
+
     return (
         <div id="div1">
             <span>{props.SearchQuery}</span>
             <br/>
             <br/>
-            <span>{JSON.stringify(pokemonAbilities)}</span>
+            <div>
+                {pokemonAbilities.map((item,i)=>
+                <p key={i}>{item.name}</p>)}
+            </div>
             <br/>
             <br/>
-            <span>{JSON.stringify(pokemonTypes)}</span>
+            <div>
+                {pokemonTypes.map((item,i)=>
+                <p key={i}>{item.name}</p>)}
+            </div>
             <br/>
             <br/>
             <span>{JSON.stringify(pokeID)}</span>
             <br/>
-            <img src={image}/>
+            <img src={back_default} alt=""/>
+            <img src={front_default}  alt=""/>
+            <br/>
+            <img src={back_shiny} alt=""/>
+            <img src={front_shiny} alt=""/>
 
         </div>
     );  

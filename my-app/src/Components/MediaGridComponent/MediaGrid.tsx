@@ -91,9 +91,9 @@ function MediaGrid(props: IMediaGridProps) {
             // eslint-disable-next-line 
     }, [props.SearchQuery]);
   
-    const back_default = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/${pokeID}.png`;
+    //const back_default = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/${pokeID}.png`;
     const front_default = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokeID}.png`;
-    const back_shiny = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/${pokeID}.png`;
+    //const back_shiny = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/${pokeID}.png`;
     const front_shiny = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${pokeID}.png`;
 
     const kanto = [];
@@ -190,7 +190,6 @@ function MediaGrid(props: IMediaGridProps) {
                     <Card.Title style={{textTransform:"capitalize", fontWeight: "bold"}}>{props.SearchQuery}'s normal form</Card.Title>
                     </Card.Body>
                     <div style={{alignItems:"inline"}}>
-                        <Card.Img variant="top" src={back_default} />
                         <Card.Img variant="top" src={front_default} />
                     </div>
                 </Card>
@@ -199,7 +198,6 @@ function MediaGrid(props: IMediaGridProps) {
                     <Card.Title style={{textTransform:"capitalize", fontWeight: "bold"}}>{props.SearchQuery}'s shiny form</Card.Title>
                     </Card.Body>
                     <div style={{alignItems:"inline"}}>
-                        <Card.Img variant="top" src={back_shiny} />
                         <Card.Img variant="top" src={front_shiny} />
                     </div>
                 </Card>

@@ -3,7 +3,7 @@ import './MediaGrid.css';
 //import Card from 'react-bootstrap/Card';
 import 'bootstrap/dist/css/bootstrap.css';
 import ProgressBar from 'react-bootstrap/ProgressBar';
-import {  CardContent, Typography, makeStyles, Card, CardMedia, GridList, createStyles, Theme, createMuiTheme, responsiveFontSizes, MuiThemeProvider } from '@material-ui/core';
+import {  CardContent, Typography, makeStyles, Card, GridList, createStyles, Theme, createMuiTheme, responsiveFontSizes, MuiThemeProvider } from '@material-ui/core';
 import { normalize } from 'path';
 
 interface Abilities {
@@ -215,7 +215,7 @@ useEffect(()=> {
                             {props.SearchQuery}'s Normal Form
                         </Typography>
                     </CardContent>
-                    <img src={front_default}/>
+                    <img src={front_default} alt="Pokemon's normal form"/>
                     
                 </Card>
                 <Card className={classes.root} style={{flex: 1}}>
@@ -224,7 +224,7 @@ useEffect(()=> {
                             {props.SearchQuery}'s Shiny Form
                         </Typography>
                     </CardContent>
-                    <img src={front_shiny}/>
+                    <img src={front_shiny} alt="Pokemon's shiny form"/>
                 </Card>
             </div>
             <br/>

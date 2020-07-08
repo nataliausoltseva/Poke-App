@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import './MediaGrid.css';
-import Card from 'react-bootstrap/Card';
+//import Card from 'react-bootstrap/Card';
 import 'bootstrap/dist/css/bootstrap.css';
 import ProgressBar from 'react-bootstrap/ProgressBar';
-import { Grid, CardContent, Typography, makeStyles } from '@material-ui/core';
+import {  CardContent, Typography, makeStyles, Card, CardMedia } from '@material-ui/core';
 
 interface Abilities {
     name: string;
@@ -13,6 +13,11 @@ interface Types {
     name: string;
     url: string;
 }
+interface AbilityInfo{
+    name: string; // by name i mean the language name
+    url: string;
+    effect: string;
+}
 
 
 interface IMediaGridProps {
@@ -21,9 +26,8 @@ interface IMediaGridProps {
 
 const useStyles = makeStyles({
     root: {
-        paddingRight: 20,
-        width: 200,
-    },
+        maxWidth: 300,
+      },
     
     title: {
       fontSize: 14,
@@ -31,6 +35,10 @@ const useStyles = makeStyles({
     pos: {
       marginBottom: 12,
     },
+    root1: {
+        flexGrow:1
+    },
+
   });
 
   
@@ -47,9 +55,6 @@ function MediaGrid(props: IMediaGridProps) {
     let abilitiesArray: any[] = [];
     const typesArray: any[] = [];
     // eslint-disable-next-line
-    
-    
-   
     
     useEffect(()=> {
         fetch('https://pokeapi.co/api/v2/pokemon/' + props.SearchQuery,{
@@ -104,8 +109,9 @@ useEffect(()=> {
 });
 // eslint-disable-next-line
 }, [props.SearchQuery]);
-    const front_default = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokeID}.png`;
-    const front_shiny = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${pokeID}.png`;
+
+    const front_default = `https://img.pokemondb.net/sprites/home/normal/${props.SearchQuery}.png`;
+    const front_shiny = `https://img.pokemondb.net/sprites/home/shiny/${props.SearchQuery}.png`;
 
     const kanto = [];
     for(var k = 1; k<=151;k++){
@@ -183,7 +189,6 @@ useEffect(()=> {
     }
 
     const progressCaptureRate = <ProgressBar now={pokeCaptureRate} label={`${pokeCaptureRate}%`}/>
-
     return (
         <div id="div1">
             <h1  style={{textTransform:"capitalize"}}>{props.SearchQuery}</h1>
@@ -192,32 +197,28 @@ useEffect(()=> {
             <br/>
             <br/>
 
-            <Grid
-                container
-                direction="row"
-                justify="center"
-                alignItems="center"
-                >
-                <Card style={{ width: '200px', border:"none" }}>
-                    <Card.Body>
-                    <Card.Title style={{textTransform:"capitalize", fontWeight: "bold"}}>{props.SearchQuery}'s normal form</Card.Title>
-                    </Card.Body>
-                    <div style={{alignItems:"inline"}}>
-                        <Card.Img variant="top" src={front_default} />
-                    </div>
+            <div style={{display:"flex", flexDirection: 'row', alignItems: "center", justifyContent:"space-evenly"}}>
+                <Card className={classes.root} style={{flex: 1,}}>
+                    <CardContent>
+                        <Typography gutterBottom variant="h5" component="h2" style={{textTransform:"capitalize"}}>
+                            {props.SearchQuery}'s Normal Form
+                        </Typography>
+                    </CardContent>
+                    <img src={front_default}/>
+                    
                 </Card>
-                <Card style={{ width: '200px', border:"none" }}>
-                    <Card.Body>
-                    <Card.Title style={{textTransform:"capitalize", fontWeight: "bold"}}>{props.SearchQuery}'s shiny form</Card.Title>
-                    </Card.Body>
-                    <div style={{alignItems:"inline"}}>
-                        <Card.Img variant="top" src={front_shiny} />
-                    </div>
+                <Card className={classes.root} style={{flex: 1}}>
+                    <CardContent>
+                        <Typography gutterBottom variant="h5" component="h2" style={{textTransform:"capitalize"}}>
+                            {props.SearchQuery}'s Shiny Form
+                        </Typography>
+                    </CardContent>
+                    <img src={front_shiny}/>
                 </Card>
-            </Grid>
+            </div>
             <br/>
-            <div style={{padding: 50, display:"inline-block"}}>
-                <Card className={classes.root} >
+            <div style={{display:"flex", flexDirection: 'row', alignItems: "center", justifyContent:"space-evenly"}}>
+                <Card className={classes.root} style={{ border:"none"}}>
                     <CardContent>
                         
                         <Typography variant="h5" component="h2">
@@ -231,7 +232,7 @@ useEffect(()=> {
                     </CardContent>
                 </Card>
                 <br/>
-                <Card className={classes.root}>
+                <Card className={classes.root} style={{ border:"none"}}>
                     <CardContent>
                         
                         <Typography variant="h5" component="h2">
@@ -246,7 +247,7 @@ useEffect(()=> {
                     </CardContent>
                 </Card>
                 <br/>
-                <Card className={classes.root}>
+                <Card className={classes.root} style={{ border:"none"}}>
                     <CardContent>
                         
                         <Typography variant="h5" component="h2">
@@ -262,7 +263,7 @@ useEffect(()=> {
                     </CardContent>
                 </Card>
                 <br/>
-                <Card >
+                <Card style={{ border:"none"}}>
                     <CardContent>
                         
                         <Typography variant="h5" component="h2">
@@ -273,6 +274,7 @@ useEffect(()=> {
                     </CardContent>
                 </Card>
                 </div>
+            
         </div>
     );  
 

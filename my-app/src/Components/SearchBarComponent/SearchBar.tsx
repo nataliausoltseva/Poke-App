@@ -33,10 +33,6 @@ function SearchBar(props: ISearchBarProps) {
     });
            
     const handleSubmit = () => {
-        
-        
-        //console.log(arrayOfPokemongs.some(item => item.name === SearchQuery));
-        // Deleted from if statement: SearchQuery?.length !== 0 && SearchQuery !== null && SearchQuery !== ""
         if (arrayOfPokemongs.some(item => item.name === SearchQuery)) {
             let UserInput: IUserInput = {
                 SearchQuery: SearchQuery,
@@ -45,7 +41,7 @@ function SearchBar(props: ISearchBarProps) {
                 
         } else {
             setHasFocus(true);
-            alert("Please enter a correct form of a pokemon name");
+            alert("This pokemon name is not in the database. If there are any mistakes in the world, please fix.\nRemember, this app would not be able to provide pokemon's data if it appears in the Generations VII or VIII.");
                
         }
 

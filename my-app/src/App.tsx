@@ -3,6 +3,7 @@ import SearchBar from './Components/SearchBarComponent/SearchBar';
 import './App.css';
 import { IUserInput } from './Common/interfaces';
 import MediaGrid from './Components/MediaGridComponent/MediaGrid';
+import Header from './Components/HeaderComponent/Header';
 
 function App() {
   const [UserInput, setUserInput] = useState<IUserInput>({
@@ -14,6 +15,7 @@ function App() {
   }
   return (
     <div className="App">
+      <Header/>
       <SearchBar SetUserInput={(a: IUserInput) => SetUserInput(a)}/>
       <MediaGrid SearchQuery={UserInput.SearchQuery}/>
     </div>

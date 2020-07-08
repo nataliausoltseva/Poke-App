@@ -3,7 +3,8 @@ import './MediaGrid.css';
 //import Card from 'react-bootstrap/Card';
 import 'bootstrap/dist/css/bootstrap.css';
 import ProgressBar from 'react-bootstrap/ProgressBar';
-import {  CardContent, Typography, makeStyles, Card, CardMedia } from '@material-ui/core';
+import {  CardContent, Typography, makeStyles, Card, CardMedia, GridList, createStyles, Theme, createMuiTheme, responsiveFontSizes, MuiThemeProvider } from '@material-ui/core';
+import { normalize } from 'path';
 
 interface Abilities {
     name: string;
@@ -24,9 +25,11 @@ interface IMediaGridProps {
     SearchQuery: (string | null);
 }
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme: Theme) =>
+createStyles({
     root: {
         maxWidth: 300,
+        fontSize: normalize('12'),
       },
     
     title: {
@@ -38,13 +41,21 @@ const useStyles = makeStyles({
     root1: {
         flexGrow:1
     },
+    gridList: {
+        flexWrap: 'nowrap',
+        // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
+        //transform: 'translateZ(0)',
+      },
 
-  });
+  }),
+);
 
   
 function MediaGrid(props: IMediaGridProps) {
     
     const classes = useStyles();
+    let theme = createMuiTheme();
+    theme = responsiveFontSizes(theme);
     
     const [pokemonAbilities, setPokemonAbilities] = useState<Abilities[]>([{name:"", url:""}])
     const [pokemonTypes, setPokemonTypes] = useState<Types[]>([{name:"", url:""}])
@@ -217,10 +228,10 @@ useEffect(()=> {
                 </Card>
             </div>
             <br/>
-            <div style={{display:"flex", flexDirection: 'row', alignItems: "center", justifyContent:"space-evenly"}}>
-                <Card className={classes.root} style={{ border:"none"}}>
+            <GridList className={classes.gridList} cols={2.5} style={{display: "flex", justifyContent:"center", }}>
+                <Card className={classes.root} style={{ width: 400, borderStyle:"solid",borderWidth:"thin"}}>
                     <CardContent>
-                        
+                    <MuiThemeProvider theme={theme}>
                         <Typography variant="h5" component="h2">
                         Abilities
                         </Typography>
@@ -229,10 +240,11 @@ useEffect(()=> {
                         <li key={i}>{item.name}</li>)}
                         
                         </Typography>
+                        </MuiThemeProvider>
                     </CardContent>
                 </Card>
                 <br/>
-                <Card className={classes.root} style={{ border:"none"}}>
+                <Card className={classes.root} style={{ width: 400,borderStyle:"solid",borderWidth:"thin"}}>
                     <CardContent>
                         
                         <Typography variant="h5" component="h2">
@@ -247,7 +259,7 @@ useEffect(()=> {
                     </CardContent>
                 </Card>
                 <br/>
-                <Card className={classes.root} style={{ border:"none"}}>
+                <Card className={classes.root} style={{ width: 400,borderStyle:"solid",borderWidth:"thin",}}>
                     <CardContent>
                         
                         <Typography variant="h5" component="h2">
@@ -263,7 +275,7 @@ useEffect(()=> {
                     </CardContent>
                 </Card>
                 <br/>
-                <Card style={{ border:"none"}}>
+                <Card style={{ width: 250,borderStyle:"solid",borderWidth:"thin"}}>
                     <CardContent>
                         
                         <Typography variant="h5" component="h2">
@@ -273,9 +285,9 @@ useEffect(()=> {
                         
                     </CardContent>
                 </Card>
-                </div>
-            
+            </GridList>
         </div>
+        
     );  
 
 }

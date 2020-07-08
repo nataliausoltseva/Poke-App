@@ -13,6 +13,8 @@ interface Types {
     name: string;
     url: string;
 }
+
+
 interface IMediaGridProps {
     SearchQuery: (string | null);
 }
@@ -45,20 +47,10 @@ function MediaGrid(props: IMediaGridProps) {
     let abilitiesArray: any[] = [];
     const typesArray: any[] = [];
     // eslint-disable-next-line
-    const[arrayOfPokemongs, setArrayOfPokemons] = useState([{}]);
-    let pokemons: any[] = [];
     
-    useEffect(() => {
-        fetch('https://pokeapi.co/api/v2/pokemon?limit=810&offset=0')
-            .then(res => res.json())
-            .then(res => {            
-                for(var count = 0; count < res.results.length; count++) {
-                    pokemons.push(res.results[count]);
-                }
-                setArrayOfPokemons(pokemons);
-            })
-    });
-
+    
+   
+    
     useEffect(()=> {
         fetch('https://pokeapi.co/api/v2/pokemon/' + props.SearchQuery,{
             headers: {
@@ -66,7 +58,8 @@ function MediaGrid(props: IMediaGridProps) {
                 'Accept': 'application/json'
             }
         }).then(response => {
-            if(response.status < 200 || response.status >= 300) {
+            
+            if(response.status < 200 || response.status >= 300  ) {
                 alert("Please enter a correct pokemon's name (without a space, digits and symbols but also in lowercase as well).");
                 return Promise.reject("Incorrect pokemon's name")
             }else {
@@ -75,7 +68,7 @@ function MediaGrid(props: IMediaGridProps) {
             
             }).then(data => {  
      
-                console.log(data); 
+                //console.log(data); 
                 
                 for(var i=0; i< data.abilities.length;i++){
                     abilitiesArray.push(data.abilities[i].ability);
@@ -102,16 +95,10 @@ useEffect(()=> {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
         }
-    }).then(response => {
-        if(response.status < 200 || response.status >= 300) {
-            alert("Please enter a correct pokemon's name (without a space, digits and symbols but also in lowercase as well).");
-            return Promise.reject("Incorrect pokemon's name")
-        }else {
-            return response.json();
-        }
-        
-        }).then(data => {  
-            setPokeCaptureRate(data.capture_rate);
+    })
+    .then(response => response.json())
+    .then(response => {  
+            setPokeCaptureRate(response.capture_rate);
             
     
 });
@@ -211,7 +198,7 @@ useEffect(()=> {
                 justify="center"
                 alignItems="center"
                 >
-                <Card style={{ minWidth: '200px', border:"none" }}>
+                <Card style={{ width: '200px', border:"none" }}>
                     <Card.Body>
                     <Card.Title style={{textTransform:"capitalize", fontWeight: "bold"}}>{props.SearchQuery}'s normal form</Card.Title>
                     </Card.Body>
@@ -219,7 +206,7 @@ useEffect(()=> {
                         <Card.Img variant="top" src={front_default} />
                     </div>
                 </Card>
-                <Card style={{ minWidth: '200px', border:"none" }}>
+                <Card style={{ width: '200px', border:"none" }}>
                     <Card.Body>
                     <Card.Title style={{textTransform:"capitalize", fontWeight: "bold"}}>{props.SearchQuery}'s shiny form</Card.Title>
                     </Card.Body>

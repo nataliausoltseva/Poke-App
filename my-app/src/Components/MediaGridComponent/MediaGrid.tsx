@@ -43,8 +43,6 @@ createStyles({
     },
     gridList: {
         flexWrap: 'nowrap',
-        // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
-        //transform: 'translateZ(0)',
       },
 
   }),
@@ -65,7 +63,6 @@ function MediaGrid(props: IMediaGridProps) {
     const [pokeCaptureRate, setPokeCaptureRate] = useState(0);
     let abilitiesArray: any[] = [];
     const typesArray: any[] = [];
-    // eslint-disable-next-line
     
     useEffect(()=> {
         fetch('https://pokeapi.co/api/v2/pokemon/' + props.SearchQuery,{

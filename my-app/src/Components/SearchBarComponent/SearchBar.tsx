@@ -13,7 +13,7 @@ interface PokemonsArray {
 
 
 function SearchBar(props: ISearchBarProps) {
-    const [SearchQuery, setSearchQuery] = useState<string>("");
+    const [SearchQuery, setSearchQuery] = useState("");
     const handleSearchQueryChange = (s: string) => {
         setSearchQuery(s);
     }
@@ -29,10 +29,11 @@ function SearchBar(props: ISearchBarProps) {
                     pokemons.push(res.results[count]);
                 }
                 setArrayOfPokemons(pokemons);
+                
             })
-    });
-           
+    });  
     const handleSubmit = () => {
+        //console.log(SearchQuery);
         if (arrayOfPokemongs.some(item => item.name === SearchQuery)) {
             let UserInput: IUserInput = {
                 SearchQuery: SearchQuery,
@@ -41,24 +42,25 @@ function SearchBar(props: ISearchBarProps) {
                 
         } else {
             setHasFocus(true);
-            alert("This error could happen due to pokemon name is not in the database or the input is empty. If there are any mistakes in the word (the name should be in lowercase), please fix. Try again afterwards. \nRemember, this app would not be able to provide pokemon's data if it appears in the Generations VII or VIII.");
-               
+            alert("This error could happen due to pokemon name is not in the database or the input is empty. If there are any mistakes in the word (the name should be in lowercase), please fix. Try again afterwards. \n\nRemember, this app would not be able to provide pokemon's data if it appears in the Generations VII or VIII.");
+ 
         }
 
     }
-    //
+
     return <div className="SearchBarContainer">
         <Grid container spacing={1}>
             <Grid item xs={12} sm={6}>
-                <TextField
-                    id="standard-helperText"
-                    label="pokemon's name"
-                    helperText="lowercase only"
-                    error={HasFocus && SearchQuery === ""}
-                    onClick={() => setHasFocus(true)}
-                    value={SearchQuery}
-                    onChange={e => handleSearchQueryChange(e.target.value)}
-                />
+                    <TextField
+                        id="standard-helperText"
+                        label="pokemon's name"
+                        helperText="lowercase only"
+                        error={HasFocus && SearchQuery === ""}
+                        onClick={() => setHasFocus(true)}
+                        value={SearchQuery}
+                        onChange={e => handleSearchQueryChange(e.target.value)}
+                    />
+
                 <Button variant="contained" color="primary" type="button"  onClick={handleSubmit}>
                     Search
                 </Button>

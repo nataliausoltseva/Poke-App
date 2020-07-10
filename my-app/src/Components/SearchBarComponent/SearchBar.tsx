@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button, Grid, TextField } from '@material-ui/core';
 import { IUserInput } from '../../Common/interfaces'
 import './SearchBar.css';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 
 interface ISearchBarProps {
     SetUserInput: (a: IUserInput) => void;
@@ -11,11 +12,11 @@ interface PokemonsArray {
     url: string;
 }
 
-
 function SearchBar(props: ISearchBarProps) {
     const [SearchQuery, setSearchQuery] = useState("");
     const handleSearchQueryChange = (s: string) => {
-        setSearchQuery(s);
+        var loweCaseString = s.toLowerCase()
+        setSearchQuery(loweCaseString);
     }
     const [HasFocus, setHasFocus] = useState<boolean>(false);
     const [arrayOfPokemongs, setArrayOfPokemons] = useState<PokemonsArray[]>([{name:"", url:""}])
@@ -33,7 +34,6 @@ function SearchBar(props: ISearchBarProps) {
             })
     });  
     const handleSubmit = () => {
-        //console.log(SearchQuery);
         if (arrayOfPokemongs.some(item => item.name === SearchQuery)) {
             let UserInput: IUserInput = {
                 SearchQuery: SearchQuery,
@@ -45,21 +45,43 @@ function SearchBar(props: ISearchBarProps) {
             alert("This error could happen due to pokemon name is not in the database or the input is empty. If there are any mistakes in the word (the name should be in lowercase), please fix. Try again afterwards. \n\nRemember, this app would not be able to provide pokemon's data if it appears in the Generations VII or VIII.");
  
         }
-
     }
 
+    const checkValue = (value:any)=>{
+        if(value===null){
+            return;
+        }
+        else if ( arrayOfPokemongs.some(item => item.name === value.name)) {
+            setSearchQuery(value.name);
+        }
+        else {
+            return;
+        }
+    }
     return <div className="SearchBarContainer">
         <Grid container spacing={1}>
             <Grid item xs={12} sm={6}>
-                    <TextField
-                        id="standard-helperText"
-                        label="pokemon's name"
+                
+                <Autocomplete
+                    id="free-solo-demo"
+                    freeSolo
+                    //autoSelect
+                    options={arrayOfPokemongs}
+                    getOptionLabel={(option) => option.name}
+                    style={{width: 300}}  
+                    getOptionSelected={(option, value) => option.name === value.name}
+                    onChange={(event, value)=> checkValue(value)}
+                    
+  
+                    renderInput={(params) =>
+                    <TextField {...params}
+                        label="Pokemon's name"
                         helperText="lowercase only"
-                        error={HasFocus && SearchQuery === ""}
-                        onClick={() => setHasFocus(true)}
+                        error={HasFocus && SearchQuery===""}
                         value={SearchQuery}
-                        onChange={e => handleSearchQueryChange(e.target.value)}
-                    />
+                        onChange={event => handleSearchQueryChange(event.target.value)}
+                    />}
+                />
 
                 <Button variant="contained" color="primary" type="button"  onClick={handleSubmit}>
                     Search
@@ -68,5 +90,4 @@ function SearchBar(props: ISearchBarProps) {
         </Grid>
     </div>
 }
-
 export default SearchBar

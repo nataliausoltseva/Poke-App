@@ -18,8 +18,10 @@
     "pokemon-images": "^2.0.1",
     "react": "^16.13.1",
     "react-alert": "^7.0.1",
+    "react-autocomplete": "^1.8.1",
     "react-bootstrap": "^1.1.0",
     "react-dom": "^16.13.1",
+    "react-hook-form": "^6.0.2",
     "react-native-responsive-fontsize": "^0.4.3",
     "react-scripts": "3.4.1",
     "typescript": "^3.7.5"
@@ -46,6 +48,7 @@
     ]
   },
   "devDependencies": {
-    "@types/react-alert": "^5.2.0"
+    "@types/react-alert": "^5.2.0",
+    "@types/react-autocomplete": "^1.8.5"
   }
 }

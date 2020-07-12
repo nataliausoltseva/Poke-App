@@ -19,7 +19,6 @@ interface AbilityInfo{
     effect: string;
 }
 
-
 interface IMediaGridProps {
     SearchQuery: (string | null);
 }
@@ -42,10 +41,8 @@ createStyles({
       picRoot: {
           maxWidth: 300
       }
-
   }),
 );
-
   
 function MediaGrid(props: IMediaGridProps) {
 
@@ -53,7 +50,6 @@ function MediaGrid(props: IMediaGridProps) {
     // eslint-disable-next-line
     let theme = createMuiTheme();
     theme = responsiveFontSizes(theme);
-    
     const [pokemonAbilities, setPokemonAbilities] = useState<Abilities[]>([{name:"", url:""}])
     const [pokemonTypes, setPokemonTypes] = useState<Types[]>([{name:"", url:""}])
     const [pokeID, setPokeID] = useState(0);
@@ -64,138 +60,72 @@ function MediaGrid(props: IMediaGridProps) {
     const typesArray: any[] = [];
     
     useEffect(()=> {
-        fetch('https://pokeapi.co/api/v2/pokemon/' + props.SearchQuery,{
+        fetch('https://pokeapi.co/api/v2/pokemon/' + props.SearchQuery)
+        .then(response => response.json())
+        .then(response => {
+            for(var i=0; i< response.abilities.length;i++){
+                abilitiesArray.push(response.abilities[i].ability);
+            }
+            setPokemonAbilities(abilitiesArray);
+            for(var j=0; j< response.types.length;j++){
+                typesArray.push(response.types[j].type);
+            }
+            setPokemonTypes(typesArray);
+            setPokeID(response.id);
+            let heightpo = response.height /10;
+            setPokeHeight(heightpo);
+            let weightpo = response.weight/10;
+            setPokeWeight(weightpo);
+        })    
+// eslint-disable-next-line
+}, [props.SearchQuery]);
+
+    useEffect(()=> {
+        fetch('https://pokeapi.co/api/v2/pokemon-species/' + props.SearchQuery,{
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
             }
-        }).then(response => {
-            
-            if(response.status < 200 || response.status >= 300  ) {
-                alert("Please enter a correct pokemon's name (without a space, digits and symbols but also in lowercase as well).");
-                return Promise.reject("Incorrect pokemon's name")
-            }else {
-                return response.json();
-            }
-            
-            }).then(data => {  
-     
-                //console.log(data); 
+        })
+        .then(response => response.json())
+        .then(response => {  
+                setPokeCaptureRate(response.capture_rate);
                 
-                for(var i=0; i< data.abilities.length;i++){
-                    abilitiesArray.push(data.abilities[i].ability);
-                }
-                setPokemonAbilities(abilitiesArray);
-                
-                for(var j=0; j< data.types.length;j++){
-                    typesArray.push(data.types[j].type);
-                }
-                setPokemonTypes(typesArray);
-                setPokeID(data.id);
-                let heightpo = data.height /10;
-                setPokeHeight(heightpo);
-                let weightpo = data.weight/10;
-                setPokeWeight(weightpo);
         
     });
-    // eslint-disable-next-line
-}, [props.SearchQuery]);
-
-useEffect(()=> {
-    fetch('https://pokeapi.co/api/v2/pokemon-species/' + props.SearchQuery,{
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        }
-    })
-    .then(response => response.json())
-    .then(response => {  
-            setPokeCaptureRate(response.capture_rate);
-            
-    
-});
-// eslint-disable-next-line
-}, [props.SearchQuery]);
+    }, [props.SearchQuery]);
 
     const front_default = `https://img.pokemondb.net/sprites/home/normal/${props.SearchQuery}.png`;
     const front_shiny = `https://img.pokemondb.net/sprites/home/shiny/${props.SearchQuery}.png`;
 
-    const kanto = [];
-    for(var k = 1; k<=151;k++){
-        kanto.push(k);
-    }
-    const johto = [];
-    for(var j = 152; j<=251;j++){
-        johto.push(j);
-    }
-    const hoenn = [];
-    for(var ko = 252; ko<=386;ko++){
-        hoenn.push(ko);
-    }
-    const sinnoh = [];
-    for(var s = 387; s<=493;s++){
-        sinnoh.push(s);
-    }
-    const unova = [];
-    for(var u = 494; u<=649;u++){
-        unova.push(u);
-    }
-    const kalos = [];
-    for(var ka = 650; ka<=721;ka++){
-        kalos.push(k);
-    }
-    const alola = [];
-    for(var al = 722; al<=809;al++){
-        alola.push(al);
-    }
-    const galar = [];
-    for(var g = 810; g<=893;g++){
-        galar.push(g);
-    }
-
     let generationIn = "";
-
-    for(var indexk=0; indexk< kanto.length;indexk++){
-        if(pokeID === kanto[indexk]){
+    for (var index =0; index < 900; index++){
+        if(pokeID===0 || pokeID <=151){
             generationIn="Kanto";
         }
-    }
-    for(var indexj=0; indexj< johto.length;indexj++){
-        if(pokeID === johto[indexj]){
+        else if(pokeID>=152 || pokeID <=251){
             generationIn="Johto";
         }
-    }
-    for(var indexh=0; indexh< hoenn.length;indexh++){
-        if(pokeID === hoenn[indexh]){
+        else if(pokeID>=252 || pokeID <=386){
             generationIn="Hoenn";
         }
-    }
-    for(var indexs=0; indexs< sinnoh.length;indexs++){
-        if(pokeID === sinnoh[indexs]){
+        else if(pokeID>=287 || pokeID <=493){
             generationIn="Sinnoh";
         }
-    }
-    for(var indexu=0; indexu< unova.length;indexu++){
-        if(pokeID === unova[indexu]){
+        else if(pokeID>=494 || pokeID <=649){
             generationIn="Unova";
         }
-    }
-    for(var indexkal=0; indexkal< kalos.length;indexkal++){
-        if(pokeID === kalos[indexkal]){
+        else if(pokeID>=650 || pokeID <=721){
             generationIn="Kalos";
         }
-    }
-    for(var indexalo=0; indexalo< alola.length;indexalo++){
-        if(pokeID === alola[indexalo]){
+        else if(pokeID>=722 || pokeID <=809){
             generationIn="Alola";
         }
-    }
-    for(var indexgal=0; indexgal< galar.length;indexgal++){
-        if(pokeID === galar[indexgal]){
+        else if(pokeID>=810){
             generationIn="Galar";
         }
     }
-
+    
     const progressCaptureRate = <ProgressBar now={pokeCaptureRate} label={`${pokeCaptureRate}%`}/>
 
     return (
@@ -270,12 +200,12 @@ useEffect(()=> {
                 <br/>
                 <Card  className={classes.root} style={{borderStyle:"solid",borderWidth:"thin"}}>
 
-                        <Typography variant="h5" component="h2" style={{ fontSize:"2.5vh", paddingBottom: 5}}>
-                        Capture rate
-                        </Typography>
-                        {progressCaptureRate}
+                <Typography variant="h5" component="h2" style={{ fontSize:"2.5vh", paddingBottom: 5}}>
+                Capture rate
+                </Typography>
+                {progressCaptureRate}
 
-                </Card>
+                </Card>            
             </GridList>
         </div>
         

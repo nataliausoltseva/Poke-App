@@ -33,7 +33,8 @@ function SearchBar(props: ISearchBarProps) {
                 setArrayOfPokemons(pokemons);
                 
             })
-    });  
+// eslint-disable-next-line
+    }, [SearchQuery]);  
     const handleSubmit = () => {
         if (arrayOfPokemongs.some(item => item.name === SearchQuery)) {
             let UserInput: IUserInput = {

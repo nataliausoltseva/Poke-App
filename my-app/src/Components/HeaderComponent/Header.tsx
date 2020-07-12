@@ -8,7 +8,7 @@ function Header() {
     <div className="App">
         <AppBar position='static' color='inherit'>
             <ToolBar>
-                <Typography variant='h5' color='inherit' style={{justifyContent:"center"}}>
+                <Typography variant='h5' color='inherit' style={{justifyContent:"center", fontSize:"3vh"}}>
                     Pokemon's information from Generations I-VII 
                 </Typography>
             </ToolBar>

@@ -3,8 +3,7 @@ import './MediaGrid.css';
 //import Card from 'react-bootstrap/Card';
 import 'bootstrap/dist/css/bootstrap.css';
 import ProgressBar from 'react-bootstrap/ProgressBar';
-import {  CardContent, Typography, makeStyles, Card, GridList, createStyles, Theme, createMuiTheme, responsiveFontSizes, MuiThemeProvider } from '@material-ui/core';
-import { normalize } from 'path';
+import { Typography, makeStyles, Card, GridList, createStyles, Theme, createMuiTheme, responsiveFontSizes } from '@material-ui/core';
 
 interface Abilities {
     name: string;
@@ -29,12 +28,8 @@ const useStyles = makeStyles((theme: Theme) =>
 createStyles({
     root: {
         maxWidth: 300,
-        fontSize: normalize('12'),
+        maxHeight: 150        
       },
-    
-    title: {
-      fontSize: 14,
-    },
     pos: {
       marginBottom: 12,
     },
@@ -44,14 +39,18 @@ createStyles({
     gridList: {
         flexWrap: 'nowrap',
       },
+      picRoot: {
+          maxWidth: 300
+      }
 
   }),
 );
 
   
 function MediaGrid(props: IMediaGridProps) {
-    
+
     const classes = useStyles();
+    // eslint-disable-next-line
     let theme = createMuiTheme();
     theme = responsiveFontSizes(theme);
     
@@ -155,6 +154,7 @@ useEffect(()=> {
     }
 
     let generationIn = "";
+
     for(var indexk=0; indexk< kanto.length;indexk++){
         if(pokeID === kanto[indexk]){
             generationIn="Kanto";
@@ -197,90 +197,84 @@ useEffect(()=> {
     }
 
     const progressCaptureRate = <ProgressBar now={pokeCaptureRate} label={`${pokeCaptureRate}%`}/>
+
     return (
         <div id="div1">
-            <h1  style={{textTransform:"capitalize"}}>{props.SearchQuery}</h1>
+            <h2  style={{textTransform:"capitalize"}}>{props.SearchQuery}</h2>
             <h5>Index: {JSON.stringify(pokeID)}</h5>
             <h5>Generation: {generationIn}</h5>
             <br/>
             <br/>
 
             <div style={{display:"flex", flexDirection: 'row', alignItems: "center", justifyContent:"space-evenly"}}>
-                <Card className={classes.root} style={{flex: 1,}}>
-                    <CardContent>
-                        <Typography gutterBottom variant="h5" component="h2" style={{textTransform:"capitalize"}}>
+                <Card className={classes.picRoot} style={{flex: 1}}>
+
+                        <Typography gutterBottom variant="h5" component="h2" style={{textTransform:"capitalize", fontSize:"2.5vh"}}>
                             {props.SearchQuery}'s Normal Form
                         </Typography>
-                    </CardContent>
+
                     <img src={front_default} alt="Pokemon's normal form"/>
                     
                 </Card>
-                <Card className={classes.root} style={{flex: 1}}>
-                    <CardContent>
-                        <Typography gutterBottom variant="h5" component="h2" style={{textTransform:"capitalize"}}>
+                <Card className={classes.picRoot} style={{flex: 1}}>
+                        <Typography gutterBottom variant="h5" component="h2" style={{ textTransform:"capitalize", fontSize:"2.5vh"}}>
                             {props.SearchQuery}'s Shiny Form
                         </Typography>
-                    </CardContent>
                     <img src={front_shiny} alt="Pokemon's shiny form"/>
                 </Card>
             </div>
             <br/>
-            <GridList className={classes.gridList} cols={2.5} style={{display: "flex", justifyContent:"center", }}>
-                <Card className={classes.root} style={{ width: 400, borderStyle:"solid",borderWidth:"thin"}}>
-                    <CardContent>
-                    <MuiThemeProvider theme={theme}>
-                        <Typography variant="h5" component="h2">
+            <GridList  className={classes.gridList} cols={2.5} style={{display: "flex", justifyContent:"center", }}>
+                <Card  className={classes.root} style={{ borderStyle:"solid",borderWidth:"thin",}}  >
+
+                        <Typography variant="h5" component="h2" style={{ fontSize:"2.5vh", textDecoration:"underline"}}>
                         Abilities
                         </Typography>
-                        <Typography variant="body2" component="p">
+                        
+                        <Typography variant="body2" component="p" style={{ fontSize:"2vh", paddingTop: 5}}>
                         {pokemonAbilities.map((item,i)=>
                         <li key={i}>{item.name}</li>)}
                         
                         </Typography>
-                        </MuiThemeProvider>
-                    </CardContent>
+
                 </Card>
                 <br/>
-                <Card className={classes.root} style={{ width: 400,borderStyle:"solid",borderWidth:"thin"}}>
-                    <CardContent>
-                        
-                        <Typography variant="h5" component="h2">
+                <Card className={classes.root} style={{borderStyle:"solid",borderWidth:"thin",}}>
+                        <Typography variant="h5" component="h2" style={{ fontSize:"2.5vh"}}>
                         Type
                         </Typography>
                         
-                        <Typography variant="body2" component="p">
+                        <Typography variant="body2" component="p" style={{ fontSize:"2vh" , paddingTop: 5}}>
                         {pokemonTypes.map((item,i)=>
                         <li key={i}>{item.name}</li>)}
                         
                         </Typography>
-                    </CardContent>
+
                 </Card>
                 <br/>
-                <Card className={classes.root} style={{ width: 400,borderStyle:"solid",borderWidth:"thin",}}>
-                    <CardContent>
+                <Card className={classes.root} style={{  borderStyle:"solid",borderWidth:"thin",}}>
+
                         
-                        <Typography variant="h5" component="h2">
+                        <Typography variant="h5" component="h2" style={{ fontSize:"2.5vh"}}>
                         Stats
                         </Typography>
                         
-                        <Typography variant="body2" component="p">
+                        <Typography variant="body2" component="p" style={{ fontSize:"2vh" , paddingTop: 5}}>
                         Height: {pokeHeight} m
                         </Typography>
-                        <Typography variant="body2" component="p">
+                        <Typography variant="body2" component="p" style={{ fontSize:"2vh"}}>
                         Weight: {pokeWeight} kg
                         </Typography>
-                    </CardContent>
+
                 </Card>
                 <br/>
-                <Card style={{ width: 250,borderStyle:"solid",borderWidth:"thin"}}>
-                    <CardContent>
-                        
-                        <Typography variant="h5" component="h2">
+                <Card  className={classes.root} style={{borderStyle:"solid",borderWidth:"thin"}}>
+
+                        <Typography variant="h5" component="h2" style={{ fontSize:"2.5vh", paddingBottom: 5}}>
                         Capture rate
                         </Typography>
                         {progressCaptureRate}
-                        
-                    </CardContent>
+
                 </Card>
             </GridList>
         </div>

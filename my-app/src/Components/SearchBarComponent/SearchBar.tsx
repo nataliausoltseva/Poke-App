@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Grid, TextField } from '@material-ui/core';
+import { Grid, TextField } from '@material-ui/core';
 import { IUserInput } from '../../Common/interfaces'
 import './SearchBar.css';
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import Button from 'react-bootstrap/Button';
 
 interface ISearchBarProps {
     SetUserInput: (a: IUserInput) => void;
@@ -71,19 +72,16 @@ function SearchBar(props: ISearchBarProps) {
                     style={{width: 300}}  
                     getOptionSelected={(option, value) => option.name === value.name}
                     onChange={(event, value)=> checkValue(value)}
-                    
-  
                     renderInput={(params) =>
                     <TextField {...params}
                         label="Pokemon's name"
-                        helperText="lowercase only"
                         error={HasFocus && SearchQuery===""}
                         value={SearchQuery}
                         onChange={event => handleSearchQueryChange(event.target.value)}
                     />}
                 />
-
-                <Button variant="contained" color="primary" type="button"  onClick={handleSubmit}>
+                
+                <Button variant="primary" size="sm" onClick={handleSubmit} style={{width:"25%", height:50}}>
                     Search
                 </Button>
             </Grid>

@@ -45,7 +45,6 @@ function SearchBar(props: ISearchBarProps) {
         } else {
             setHasFocus(true);
             alert("This error could happen due to pokemon name is not in the database or the input is empty. If there are any mistakes in the word (the name should be in lowercase), please fix. Try again afterwards. \n\nRemember, this app would not be able to provide pokemon's data if it appears in the Generations VII or VIII.");
- 
         }
     }
 
@@ -62,7 +61,7 @@ function SearchBar(props: ISearchBarProps) {
     }
     return <div className="SearchBarContainer">
         <Grid container spacing={1}>
-            <Grid item xs={12} sm={6}>
+            <div>
                 
                 <Autocomplete
                     id="free-solo-demo"
@@ -70,7 +69,7 @@ function SearchBar(props: ISearchBarProps) {
                     //autoSelect
                     options={arrayOfPokemongs}
                     getOptionLabel={(option) => option.name}
-                    style={{width: 300}}  
+                    style={{width: "35vh", paddingRight:10}}  
                     getOptionSelected={(option, value) => option.name === value.name}
                     onChange={(event, value)=> checkValue(value)}
                     renderInput={(params) =>
@@ -81,11 +80,10 @@ function SearchBar(props: ISearchBarProps) {
                         onChange={event => handleSearchQueryChange(event.target.value)}
                     />}
                 />
-                
-                <Button variant="primary" size="sm" onClick={handleSubmit} style={{width:"25%", height:50}}>
+                <Button variant="primary" size="sm" onClick={handleSubmit} style={{width:"10vh", height:50}}>
                     Search
                 </Button>
-            </Grid>
+            </div>
         </Grid>
     </div>
 }

@@ -4,6 +4,8 @@ import './MediaGrid.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import { Typography, makeStyles, Card, GridList, createStyles, Theme, createMuiTheme, responsiveFontSizes } from '@material-ui/core';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
 
 interface Abilities {
     name: string;
@@ -26,8 +28,8 @@ interface IMediaGridProps {
 const useStyles = makeStyles((theme: Theme) =>
 createStyles({
     root: {
-        maxWidth: 300,
-        maxHeight: 150        
+        maxWidth: 400,
+    
       },
     pos: {
       marginBottom: 12,
@@ -76,11 +78,8 @@ function MediaGrid(props: IMediaGridProps) {
             setPokeHeight(heightpo);
             let weightpo = response.weight/10;
             setPokeWeight(weightpo);
-        })    
-// eslint-disable-next-line
-}, [props.SearchQuery]);
-
-    useEffect(()=> {
+        }) 
+        
         fetch('https://pokeapi.co/api/v2/pokemon-species/' + props.SearchQuery,{
             headers: {
                 'Content-Type': 'application/json',
@@ -90,10 +89,10 @@ function MediaGrid(props: IMediaGridProps) {
         .then(response => response.json())
         .then(response => {  
                 setPokeCaptureRate(response.capture_rate);
-                
         
     });
-    }, [props.SearchQuery]);
+// eslint-disable-next-line
+}, [props.SearchQuery]);
 
     const front_default = `https://img.pokemondb.net/sprites/home/normal/${props.SearchQuery}.png`;
     const front_shiny = `https://img.pokemondb.net/sprites/home/shiny/${props.SearchQuery}.png`;
@@ -126,7 +125,7 @@ function MediaGrid(props: IMediaGridProps) {
         }
     }
     
-    const progressCaptureRate = <ProgressBar now={pokeCaptureRate} label={`${pokeCaptureRate}%`}/>
+    const progressCaptureRate = <ProgressBar now={pokeCaptureRate} label={`${pokeCaptureRate}%`}  style={{width:"50%"}}/>
 
     return (
         <div id="div1">
@@ -134,17 +133,13 @@ function MediaGrid(props: IMediaGridProps) {
             <h5>Index: {JSON.stringify(pokeID)}</h5>
             <h5>Generation: {generationIn}</h5>
             <br/>
-            <br/>
 
             <div style={{display:"flex", flexDirection: 'row', alignItems: "center", justifyContent:"space-evenly"}}>
                 <Card className={classes.picRoot} style={{flex: 1}}>
-
                         <Typography gutterBottom variant="h5" component="h2" style={{textTransform:"capitalize", fontSize:"2.5vh"}}>
                             {props.SearchQuery}'s Normal Form
                         </Typography>
-
                     <img src={front_default} alt="Pokemon's normal form"/>
-                    
                 </Card>
                 <Card className={classes.picRoot} style={{flex: 1}}>
                         <Typography gutterBottom variant="h5" component="h2" style={{ textTransform:"capitalize", fontSize:"2.5vh"}}>
@@ -154,59 +149,50 @@ function MediaGrid(props: IMediaGridProps) {
                 </Card>
             </div>
             <br/>
-            <GridList  className={classes.gridList} cols={2.5} style={{display: "flex", justifyContent:"center", }}>
-                <Card  className={classes.root} style={{ borderStyle:"solid",borderWidth:"thin",}}  >
-
+            <Container>
+                <Row md={4} style={{display:"flex", justifyContent: 'center'}}>
+                        <div className="card" style={{width: "10rem"}}>
                         <Typography variant="h5" component="h2" style={{ fontSize:"2.5vh", textDecoration:"underline"}}>
-                        Abilities
+                            Abilities
                         </Typography>
-                        
-                        <Typography variant="body2" component="p" style={{ fontSize:"2vh", paddingTop: 5}}>
-                        {pokemonAbilities.map((item,i)=>
-                        <li key={i}>{item.name}</li>)}
-                        
+                        <Typography variant="body2" component="p" style={{ fontSize:"2vh", paddingTop: 5, listStyleType:"none"}}>
+                            {pokemonAbilities.map((item,i)=>
+                            <li key={i}>{item.name}</li>)}  
                         </Typography>
-
-                </Card>
-                <br/>
-                <Card className={classes.root} style={{borderStyle:"solid",borderWidth:"thin",}}>
-                        <Typography variant="h5" component="h2" style={{ fontSize:"2.5vh"}}>
-                        Type
+                    </div>
+                    <br/>
+                    <div className="card" style={{width: "10rem"}}>
+                            <Typography variant="h5" component="h2" style={{ fontSize:"2.5vh", textDecoration:"underline"}}>
+                            Type
+                            </Typography>
+                            <Typography variant="body2" component="p" style={{ fontSize:"2vh" , paddingTop: 5,listStyleType:"none"}}>
+                            {pokemonTypes.map((item,i)=>
+                            <li key={i}>{item.name}</li>)}   
+                            </Typography>
+                    </div>
+                    <br/>
+                    <div className="card" style={{width: "10rem"}}>
+                        <Typography variant="h5" component="h2" style={{ fontSize:"2.5vh", textDecoration:"underline"}}>
+                            Stats
                         </Typography>
-                        
                         <Typography variant="body2" component="p" style={{ fontSize:"2vh" , paddingTop: 5}}>
-                        {pokemonTypes.map((item,i)=>
-                        <li key={i}>{item.name}</li>)}
-                        
-                        </Typography>
-
-                </Card>
-                <br/>
-                <Card className={classes.root} style={{  borderStyle:"solid",borderWidth:"thin",}}>
-
-                        
-                        <Typography variant="h5" component="h2" style={{ fontSize:"2.5vh"}}>
-                        Stats
-                        </Typography>
-                        
-                        <Typography variant="body2" component="p" style={{ fontSize:"2vh" , paddingTop: 5}}>
-                        Height: {pokeHeight} m
+                            Height: {pokeHeight} m
                         </Typography>
                         <Typography variant="body2" component="p" style={{ fontSize:"2vh"}}>
-                        Weight: {pokeWeight} kg
+                            Weight: {pokeWeight} kg
                         </Typography>
-
-                </Card>
-                <br/>
-                <Card  className={classes.root} style={{borderStyle:"solid",borderWidth:"thin"}}>
-
-                <Typography variant="h5" component="h2" style={{ fontSize:"2.5vh", paddingBottom: 5}}>
-                Capture rate
-                </Typography>
-                {progressCaptureRate}
-
-                </Card>            
-            </GridList>
+                    </div>
+                    <br/>
+                    <div className="card" style={{width: "10rem"}}>
+                        <Typography variant="h5" component="h2" style={{ fontSize:"2.5vh", textDecoration:"underline"}}>
+                            Capture rate
+                        </Typography>
+                        <div style={{display:"flex", justifyContent: 'center', paddingTop: 10}}>
+                        {progressCaptureRate}
+                        </div>
+                    </div> 
+                </Row>
+        </Container>
         </div>
         
     );  

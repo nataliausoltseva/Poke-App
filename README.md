@@ -1,5 +1,7 @@
 # Phase-1-web-app
 
+The web-app can be accessed by: [Pokemon's Info](https://pokeapp-nu.azurewebsites.net/)
+
 ## What this web-app is going to do: 
 -  A user is going to be able to enter a name of a pokemon (Not including the most recent pokemons that appear in Generation VII:Alola (some of them) and VIII:Galar)
 - The app will return all important information about that pokemon such as being to see the difference between normal and shiny form of the selected pokemon, abilities, types and see from what generation with index it comes from.

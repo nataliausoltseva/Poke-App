@@ -3,7 +3,7 @@ import './MediaGrid.css';
 //import Card from 'react-bootstrap/Card';
 import 'bootstrap/dist/css/bootstrap.css';
 import ProgressBar from 'react-bootstrap/ProgressBar';
-import { Typography, makeStyles, Card, GridList, createStyles, Theme, createMuiTheme, responsiveFontSizes } from '@material-ui/core';
+import { Typography, makeStyles, Card,  createStyles, Theme, createMuiTheme, responsiveFontSizes } from '@material-ui/core';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 
@@ -30,15 +30,6 @@ createStyles({
     root: {
         maxWidth: 400,
     
-      },
-    pos: {
-      marginBottom: 12,
-    },
-    root1: {
-        flexGrow:1
-    },
-    gridList: {
-        flexWrap: 'nowrap',
       },
       picRoot: {
           maxWidth: 300
@@ -133,7 +124,6 @@ function MediaGrid(props: IMediaGridProps) {
             <h5>Index: {JSON.stringify(pokeID)}</h5>
             <h5>Generation: {generationIn}</h5>
             <br/>
-
             <div style={{display:"flex", flexDirection: 'row', alignItems: "center", justifyContent:"space-evenly"}}>
                 <Card className={classes.picRoot} style={{flex: 1}}>
                         <Typography gutterBottom variant="h5" component="h2" style={{textTransform:"capitalize", fontSize:"2.5vh"}}>
@@ -194,9 +184,7 @@ function MediaGrid(props: IMediaGridProps) {
                 </Row>
         </Container>
         </div>
-        
     );  
-
 }
 
 export default MediaGrid

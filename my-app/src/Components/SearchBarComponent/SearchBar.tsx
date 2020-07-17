@@ -66,7 +66,6 @@ function SearchBar(props: ISearchBarProps) {
                 <Autocomplete
                     id="free-solo-demo"
                     freeSolo
-                    //autoSelect
                     options={arrayOfPokemongs}
                     getOptionLabel={(option) => option.name}
                     style={{width: "35vh", paddingRight:10}}  
@@ -77,10 +76,9 @@ function SearchBar(props: ISearchBarProps) {
                         label="Pokemon's name"
                         error={HasFocus && SearchQuery===""}
                         value={SearchQuery}
-                        onChange={event => handleSearchQueryChange(event.target.value)}
-                    />}
+                        onChange={event => handleSearchQueryChange(event.target.value)}/>}
                 />
-                <Button variant="primary" size="sm" onClick={handleSubmit} style={{width:"10vh", height:50}}>
+                <Button variant="primary" size="sm" onClick={handleSubmit} style={{width:"6rem", height:50}}>
                     Search
                 </Button>
             </div>

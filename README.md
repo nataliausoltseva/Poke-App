@@ -1,4 +1,4 @@
-# Phase-1-web-app
+# Poke-App
 
 The web-app can be accessed by: [Pokemon's Info](https://pokeapp-nu.azurewebsites.net/)
 

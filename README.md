@@ -1,5 +1,3 @@
-[![Build Status](https://dev.azure.com/msa-devops-2020-nu/pokemon-app/_apis/build/status/nataliausoltseva.Phase-1-web-app-2020?branchName=master)](https://dev.azure.com/msa-devops-2020-nu/pokemon-app/_build/latest?definitionId=1&branchName=master)
-
 # Poke-App
 
 The web-app can be accessed by: [Pokemon's Info](https://pokeapp-nu.azurewebsites.net/)

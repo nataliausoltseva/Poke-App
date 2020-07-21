@@ -12,15 +12,36 @@ The web-app can be accessed by: [Pokemon's Info](https://pokeapp-nu.azurewebsite
 #### Drop down menu when a user types some of the pokemon's name
 ![dropdown menu with suggestions](https://user-images.githubusercontent.com/26496834/87839474-1992a000-c8ef-11ea-959f-2408ed114d42.PNG)
 
+## Description of build and release pipelines:
+Both build and release pipelines are continous on a new commit to `master` branch. This means that every time when a new commit is made to the branch, a new build will start proceding and when the build is finished then a new release is created.
 
-## What this web-app is going to do: 
--  A user is going to be able to enter a name of a pokemon (Not including the most recent pokemons that appear in Generation VII:Alola (some of them) and VIII:Galar)
-- The app will return all important information about that pokemon such as being to see the difference between normal and shiny form of the selected pokemon, abilities, types and see from what generation with index it comes from.
+#### Build Pipeline ####
+- To make it work only on the commit to `master` it is specified in the `trigger` such as 
+```yml
+trigger:
+- master
+```
+- Variables are used to make the code more clear since we only need to define the varibale once by adding hard-coded values directly and then we can use that multiple times in other commands.
+- `pool` specifies which pool to use for the job of the pipeline i.e. it shows the version of it but also holds the information about the job's strategy.
+- The steps show the sequence which is going to be followed to make up a job. Each step runs on their own with acces to the pipeline workspace.
+  - Task is used to reference to a building block of a pipline including the version of it. In this app, there are 3 tasks:
+    - `NodeTool@0` that will install the `Node.js` version of `10.x`
+    - `ArchiveFiles@2` where the `buildDir` is added to the archive. Since the root folder is not selcted i.e. `includeRootFolder: False`, then the root folder name will not be prefixed to the file path within the achieve. It uses the `zip` as an achieve type. `ArchieveFile` contains a specific name of the archieve file that is going to be created. `replaceExistingArchive` shows that if any existing archive exists already then it would overwrite it.
+    - `PublishBuildArtifacts@1` where the `pathToPublish` specifies the folder/file path to be published. `ArtifactName` is just a name of the artifact that created. `publishLocation` tells where to store that atifact in the Azre Pipelines.
+  - Script is a just a shortcut for the command line task in this case it going to the `rootDir` following by npm install and build.
+  
+#### Release Pipeline ####
+It deploys the artifacts that are produced by the Azure Pipeline build for this app (CI build). The CD release pipeline was defined by using a stage that is defined by a job and a task. Foir this app the template of the Deploy Azure App Service. This results in the deployment of the artifacts into the Azure web-site (web-app).
+
+## How to use this app: 
+- Enter a name of a pokemon (Not including the most recent pokemons that appear in Generation VII:Alola (some of them) and VIII:Galar)
+- The app returns all important information about that pokemon such as being to see the difference between normal and shiny form of the selected pokemon, abilities, types and see from what generation with index it comes from.
 
 ## What this app involves:
 - TypeScript React
 - REST API for pokemons - [PokeAPI](https://pokeapi.co/)
 - Pokemon images were taken from -[Pokemon Database](https://pokemondb.net/sprites/). Since this provides a better quality for them than in the API address.
+- Deployment using Azure pipelines
 
 ## How to install this app:
 - clone the repo

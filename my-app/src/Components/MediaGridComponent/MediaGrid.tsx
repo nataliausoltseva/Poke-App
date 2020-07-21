@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import './MediaGrid.css';
-//import Card from 'react-bootstrap/Card';
 import 'bootstrap/dist/css/bootstrap.css';
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import { Typography, makeStyles, Card,  createStyles, Theme, createMuiTheme, responsiveFontSizes } from '@material-ui/core';
@@ -115,9 +113,10 @@ function MediaGrid(props: IMediaGridProps) {
             generationIn="Galar";
         }
     }
-    
-    const progressCaptureRate = <ProgressBar now={pokeCaptureRate} label={`${pokeCaptureRate}%`}  style={{width:"50%"}}/>
 
+    const percentage = pokeCaptureRate * 100 / 255 ;
+    const percentage_rounded = (Math.round(pokeCaptureRate * 100 / 255).toFixed(0)) ;
+    const progressCaptureRate = <ProgressBar now={percentage} style={{width:"50%"}} />
     return (
         <div id="div1">
             <h2  style={{textTransform:"capitalize"}}>{props.SearchQuery}</h2>
@@ -180,6 +179,7 @@ function MediaGrid(props: IMediaGridProps) {
                         <div style={{display:"flex", justifyContent: 'center', paddingTop: 10}}>
                         {progressCaptureRate}
                         </div>
+                        <div style={{ fontSize:"2vh"}}>{percentage_rounded}%</div>
                     </div> 
                 </Row>
         </Container>

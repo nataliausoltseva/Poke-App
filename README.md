@@ -13,25 +13,26 @@ The web-app can be accessed by: [Pokemon's Info](https://pokeapp-nu.azurewebsite
 ![dropdown menu with suggestions](https://user-images.githubusercontent.com/26496834/87839474-1992a000-c8ef-11ea-959f-2408ed114d42.PNG)
 
 ## Description of build and release pipelines:
-Both build and release pipelines are continous on a new commit to `master` branch. This means that every time when a new commit is made to the branch, a new build will start proceding and when the build is finished then a new release is created.
+The build pipeline gets executed on a new commit to `develop` and `master` branches. The release pipeline automatically deploys the code to App Service once the build is complete for `master` branch. 
 
 #### Build Pipeline ####
-- To make it work only on the commit to `master` it is specified in the `trigger` such as 
+- To restrict the build pipeline to `develop` and `master` branches, they are specified in the `trigger` options such as 
 ```yml
 trigger:
 - master
+- develop
 ```
-- Variables are used to make the code more clear since we only need to define the varibale once by adding hard-coded values directly and then we can use that multiple times in other commands.
-- `pool` specifies which pool to use for the job of the pipeline i.e. it shows the version of it but also holds the information about the job's strategy.
-- The steps show the sequence which is going to be followed to make up a job. Each step runs on their own with acces to the pipeline workspace.
-  - Task is used to reference to a building block of a pipline including the version of it. In this app, there are 3 tasks:
+- Pipeline variables are used to reduce amount of hard-coded strings in the pipeline.
+- `pool` specifies which OS to use for the job of the pipeline. For this app `ubantu-latest` was used.
+- The steps show the sequence which is going to be followed to make up a job. Each step runs on their own with access to the pipeline workspace.
+  - Task is used to reference to a building block of a pipeline including the version of it. In this app, there are 3 tasks:
     - `NodeTool@0` that will install the `Node.js` version of `10.x`
-    - `ArchiveFiles@2` where the `buildDir` is added to the archive. Since the root folder is not selcted i.e. `includeRootFolder: False`, then the root folder name will not be prefixed to the file path within the achieve. It uses the `zip` as an achieve type. `ArchieveFile` contains a specific name of the archieve file that is going to be created. `replaceExistingArchive` shows that if any existing archive exists already then it would overwrite it.
-    - `PublishBuildArtifacts@1` where the `pathToPublish` specifies the folder/file path to be published. `ArtifactName` is just a name of the artifact that created. `publishLocation` tells where to store that atifact in the Azre Pipelines.
-  - Script is a just a shortcut for the command line task in this case it going to the `rootDir` following by npm install and build.
-  
+    -  Script is a just a shortcut for the command line task. For this app it installs npm dependencies and generates optimised web-app files.
+    - `ArchiveFiles@2` task creates a zip file from the directory specified by `buildDir`.
+    - `PublishBuildArtifacts@1` task publishes a build artifact so it can be accessed by release pipeline later.
+    
 #### Release Pipeline ####
-It deploys the artifacts that are produced by the Azure Pipeline build for this app (CI build). The CD release pipeline was defined by using a stage that is defined by a job and a task. Foir this app the template of the Deploy Azure App Service. This results in the deployment of the artifacts into the Azure web-site (web-app).
+It deploys the artifacts that are produced by the Azure Pipeline build for this app (CI build). The CD release pipeline contains 1 stage with the Deploy Azure App Service task. This task deploys build artifacts to my App Service.
 
 ## How to use this app: 
 - Enter a name of a pokemon (Not including the most recent pokemons that appear in Generation VII:Alola (some of them) and VIII:Galar)

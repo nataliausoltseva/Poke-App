@@ -190,8 +190,8 @@ function MediaGrid(props: IMediaGridProps) {
                         <div style={{ fontSize:"2vh"}}>{percentage_rounded}%</div>
                     </div> 
                     <br/>
-                    <div className="card" style={{width: "10rem", columns: 2}}>
-                        <Paper style={{maxHeight: 200, overflow: 'auto'}}>
+                    <div className="card" style={{width: "10rem", marginTop: 10}}>
+                        <Paper style={{maxHeight: 265, overflow: 'auto'}}>
                             <List>
                                 <Typography variant="h5" component="h2" style={{ fontSize:"2.5vh", textDecoration:"underline"}}>
                                 Moves

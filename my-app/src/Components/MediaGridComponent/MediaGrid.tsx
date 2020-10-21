@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import ProgressBar from 'react-bootstrap/ProgressBar';
-import { Typography, makeStyles, Card,  createStyles, Theme, createMuiTheme, responsiveFontSizes } from '@material-ui/core';
+import { Typography, makeStyles, Card,  createStyles, Theme, createMuiTheme, responsiveFontSizes, List, Paper } from '@material-ui/core';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
+import { FixedSizeList } from 'react-window';
 
 interface Abilities {
     name: string;
@@ -13,10 +14,9 @@ interface Types {
     name: string;
     url: string;
 }
-interface AbilityInfo{
-    name: string; // by name i mean the language name
+interface Moves {
+    name: string;
     url: string;
-    effect: string;
 }
 
 interface IMediaGridProps {
@@ -42,6 +42,7 @@ function MediaGrid(props: IMediaGridProps) {
     let theme = createMuiTheme();
     theme = responsiveFontSizes(theme);
     const [pokemonAbilities, setPokemonAbilities] = useState<Abilities[]>([{name:"", url:""}])
+    const [pokemonMoves, setPokemonMoves] = useState<Moves[]>([{name:"", url:""}])
     const [pokemonTypes, setPokemonTypes] = useState<Types[]>([{name:"", url:""}])
     const [pokeID, setPokeID] = useState(0);
     const [pokeWeight, setPokeWeight] = useState(0);
@@ -49,6 +50,7 @@ function MediaGrid(props: IMediaGridProps) {
     const [pokeCaptureRate, setPokeCaptureRate] = useState(0);
     let abilitiesArray: any[] = [];
     const typesArray: any[] = [];
+    let movesArray: any[] = [];
     
     useEffect(()=> {
         fetch('https://pokeapi.co/api/v2/pokemon/' + props.SearchQuery)
@@ -62,6 +64,11 @@ function MediaGrid(props: IMediaGridProps) {
                 typesArray.push(response.types[j].type);
             }
             setPokemonTypes(typesArray);
+            
+            for(var i=0; i< response.moves.length; i++){
+                movesArray.push(response.moves[i].move);
+            }
+            setPokemonMoves(movesArray);
             setPokeID(response.id);
             let heightpo = response.height /10;
             setPokeHeight(heightpo);
@@ -80,9 +87,10 @@ function MediaGrid(props: IMediaGridProps) {
                 setPokeCaptureRate(response.capture_rate);
         
     });
+    
 // eslint-disable-next-line
 }, [props.SearchQuery]);
-
+    
     const front_default = `https://img.pokemondb.net/sprites/home/normal/${props.SearchQuery}.png`;
     const front_shiny = `https://img.pokemondb.net/sprites/home/shiny/${props.SearchQuery}.png`;
 
@@ -181,6 +189,20 @@ function MediaGrid(props: IMediaGridProps) {
                         </div>
                         <div style={{ fontSize:"2vh"}}>{percentage_rounded}%</div>
                     </div> 
+                    <br/>
+                    <div className="card" style={{width: "10rem", columns: 2}}>
+                        <Paper style={{maxHeight: 200, overflow: 'auto'}}>
+                            <List>
+                                <Typography variant="h5" component="h2" style={{ fontSize:"2.5vh", textDecoration:"underline"}}>
+                                Moves
+                                </Typography>
+                                <Typography variant="body2" component="p" style={{ fontSize:"2vh" , paddingTop: 5,listStyleType:"none"}}>
+                                {pokemonMoves.map((item,i)=>
+                                <li key={i}>{item.name}</li>)}   
+                                </Typography>
+                            </List>
+                        </Paper>
+                    </div>
                 </Row>
         </Container>
         </div>

@@ -1,7 +1,4 @@
 # Poke-App
-
-The web-app can be accessed by: [Pokemon's Info](https://pokeapp-nu.azurewebsites.net/)
-
 ## How app looks like:
 #### Main Page
 ![main page](https://user-images.githubusercontent.com/26496834/87839433-e6501100-c8ee-11ea-84a9-5c9bd98e4175.PNG)

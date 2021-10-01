@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import ProgressBar from 'react-bootstrap/ProgressBar';
-import { Typography, makeStyles, Card,  createStyles, Theme, createMuiTheme, responsiveFontSizes, List, Paper } from '@material-ui/core';
+import { makeStyles, createStyles, Theme, createMuiTheme, responsiveFontSizes } from '@material-ui/core';
 import pluralise from 'pluralize';
+/** @jsx jsx */
+import { jsx, css } from '@emotion/react';
 
 interface Abilities {
     name: string;
@@ -124,7 +126,7 @@ function MediaGrid(props: IMediaGridProps) {
 
     const percentage = pokeCaptureRate * 100 / 255 ;
     const percentage_rounded = (Math.round(pokeCaptureRate * 100 / 255).toFixed(0)) ;
-    const progressCaptureRate = <ProgressBar now={percentage} style={{width:"50%"}} />
+    const progressCaptureRate = <ProgressBar now={percentage} css={extraStyleProgressBarStyle} />
 
     const onPrevPage = () => {
         if (movesPageIndex){
@@ -139,92 +141,87 @@ function MediaGrid(props: IMediaGridProps) {
     }
 
     return (
-        <div id="div1" style={{ marginLeft: '10px'}}>
-           <div style={{textAlign:'left'}}>
-                 <h2  style={{textTransform:"capitalize"}}>{props.SearchQuery}</h2>
+        <div id="div1" css={containerStyle}>
+           <div css={pokemonNameContainerStyle}>
+                <h2 css={pokemonNameStyle}>{props.SearchQuery}</h2>
                 <h5>Index: {JSON.stringify(pokeID)}</h5>
                 <h5>Generation: {generationIn}</h5>
-                <br/>
            </div>
-            <div style={{display: "flex"}}>
-                <div style={{display:"flex", flexDirection: 'column', alignItems: "center", justifyContent:"space-evenly", marginRight: "2em"}}>
-                    <Card className={classes.picRoot} style={{flex: 1}}>
-                            <Typography gutterBottom variant="h5" component="h2" style={{textTransform:"capitalize", fontSize:"2.5vh"}}>
-                                {props.SearchQuery}'s Normal Form
-                            </Typography>
-                        <img src={front_default} alt="Pokemon's normal form"/>
-                    </Card>
+            <div css={pokemonInfoWrapperStyle}>
+                <div css={imageCardsContainerStyle}>
+                    <img src={front_default} alt="Pokemon's normal form"/>
+                    <div  css={cardHeaderStyle}>
+                        {props.SearchQuery}'s Normal Form
+                    </div>
                     <br/>
-                    <Card className={classes.picRoot} style={{flex: 1}}>
-                            <Typography gutterBottom variant="h5" component="h2" style={{ textTransform:"capitalize", fontSize:"2.5vh"}}>
-                                {props.SearchQuery}'s Shiny Form
-                            </Typography>
-                        <img src={front_shiny} alt="Pokemon's shiny form"/>
-                    </Card>
+                    <img src={front_shiny} alt="Pokemon's shiny form"/>
+                    <div css={cardHeaderStyle}>
+                        {props.SearchQuery}'s Shiny Form
+                    </div>        
                 </div>
                 <br/>
-                <div style={{width: "100%"}}>
-                    <div style={{display: "flex", width: "100%"}}>
-                        <Typography variant="h5" component="h2" style={{ fontSize:"2.5vh", textDecoration:"underline", marginRight: "10px"}}>
+                <div css={statsContainerStyle}>
+                    <div css={statsItemWrapperStyle}>
+                        <div css={headerStyle}>
                             {pluralise('Ability', pokemonAbilities.length)}:
-                        </Typography>
-                        <Typography variant="body2" component="p" style={{ fontSize:"2vh", paddingTop: 5, listStyleType:"none", display: 'flex'}}>
+                        </div>
+                        <div css={statsListContainerStyle}>
                             {pokemonAbilities.map((item,i)=>
-                                <div key={i} style={{marginRight: "10px"}}>{i === pokemonAbilities.length - 1 ? item.name : `${item.name},`}</div>)}  
-                        </Typography>
+                                <div key={i} css={statsItemStyle}>{i === pokemonAbilities.length - 1 ? item.name : `${item.name},`}</div>)}  
+                        </div>
                     </div>
-                    <div style={{display: "flex", width: "100%"}}>
-                        <Typography variant="h5" component="h2" style={{ fontSize:"2.5vh", textDecoration:"underline", marginRight: "10px"}}>
+                    <div css={statsItemWrapperStyle}>
+                        <div css={headerStyle}>
                         {pluralise('Type', pokemonTypes.length)}:
-                        </Typography>
-                        <Typography variant="body2" component="p" style={{ fontSize:"2vh" , paddingTop: 5,listStyleType:"none", display: 'flex',}}>
+                        </div>
+                        <div css={statsListContainerStyle}>
                             {pokemonTypes.map((item,i)=>
-                               <div key={i} style={{marginRight: "10px"}}>{i === pokemonTypes.length - 1 ? item.name : `${item.name},`}</div>)}  
-                        </Typography>
+                               <div key={i} css={statsItemStyle}>{i === pokemonTypes.length - 1 ? item.name : `${item.name},`}</div>)}  
+                        </div>
                     </div>
-                    <div style={{display: "flex", width: "100%"}}>
-                        <Typography variant="h5" component="h2" style={{ fontSize:"2.5vh", textDecoration:"underline", marginRight: "10px"}}>
+                    <div css={statsItemWrapperStyle}>
+                        <div css={headerStyle}>
                             Height:
-                        </Typography>
-                        <Typography variant="body2" component="p" style={{ fontSize:"2vh" , paddingTop: 5}}>
+                        </div>
+                        <div css={statsListContainerStyle}>
                             {pokeHeight} m
-                        </Typography>
+                        </div>
                        
                     </div>
-                    <div style={{display: "flex", width: "100%"}}>
-                        <Typography variant="h5" component="h2" style={{ fontSize:"2.5vh", textDecoration:"underline", marginRight: "10px"}}>
+                    <div css={statsItemWrapperStyle}>
+                        <div css={headerStyle}>
                             Weight:
-                        </Typography>
-                        <Typography variant="body2" component="p" style={{ fontSize:"2vh"}}>
+                        </div>
+                        <div css={statsListContainerStyle}>
                             {pokeWeight} kg
-                        </Typography>
+                        </div>
                     
                     </div>
-                    <div style={{display: "flex", width: "100%"}}>
-                        <Typography variant="h5" component="h2" style={{ fontSize:"2.5vh", textDecoration:"underline",  marginRight: "10px"}}>
+                    <div css={statsItemWrapperStyle}>
+                        <div css={headerStyle}>
                             Capture rate:
-                        </Typography>
-                        <div style={{display:"flex", justifyContent: 'left', paddingTop: 10, width: '30%'}}>
+                        </div>
+                        <div css={progressBarStyle} >
                             {progressCaptureRate}
                         </div>
-                        <div style={{ fontSize:"2vh", marginLeft: '-10%'}}>{percentage_rounded}%</div>
+                        <div css={progressBarLabelStyle}>{percentage_rounded}%</div>
                     </div> 
-                    <div style={{display: "flex", width: "100%"}}>
-                        <Typography variant="h5" component="h2" style={{ fontSize:"2.5vh", textDecoration:"underline", marginRight: "10px"}}>
+                    <div css={statsItemWrapperStyle}>
+                        <div css={headerStyle}>
                             {pluralise('Move', pokemonMoves.length)}:
-                        </Typography>
-                        <div onClick={onPrevPage} style={{height: '40px', width: '40px', fontSize: '24px', background: 'aliceblue', borderRadius: '50%', textAlign:'center', cursor: 'pointer', marginRight: '10px'}}>{"<"}</div>
-                        <Typography variant="body2" component="p" style={{ fontSize:"2vh" , paddingTop: 5,listStyleType:"none", display: 'flex',}}>
+                        </div>
+                        <div onClick={onPrevPage} css={arrowStyle}>{"<"}</div>
+                        <div css={statsListContainerStyle}>
                             {pokemonMoves.map((item,i)=> (
                                 i >= movesPageIndex * 4 && i <= (movesPageIndex + 1) * 4 && (
-                                    <div key={i} style={{marginRight: "10px"}}>
+                                    <div key={i} css={statsItemStyle}>
                                         {i === pokemonTypes.length - 1 ? item.name : `${item.name},`}
                                     </div>
                                 )
                             ))}
 
-                        </Typography>
-                        <div onClick={onNextPage} style={{height: '40px', width: '40px', fontSize: '24px', background: 'aliceblue', borderRadius: '50%', textAlign:'center', cursor: 'pointer'}}>{">"}</div>
+                        </div>
+                        <div onClick={onNextPage} css={arrowStyle}>{">"}</div>
                     </div>
                 </div>
             </div>
@@ -233,3 +230,84 @@ function MediaGrid(props: IMediaGridProps) {
 }
 
 export default MediaGrid
+
+const containerStyle = css`
+    margin-left: 10px
+`;
+
+const pokemonNameContainerStyle = css`
+    text-align: left;
+`;
+
+const pokemonNameStyle = css`
+    text-transform: capitalize;
+`;
+
+const pokemonInfoWrapperStyle = css`
+    display: flex;
+`;
+
+const imageCardsContainerStyle = css`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-space-evenly;
+    margin-right: 2em;
+`;
+
+const cardHeaderStyle = css`
+    text-transform: capitalize;
+    font-size: 2.5vh;
+`;
+
+const statsContainerStyle = css`
+    width: 100%;
+`;
+
+const statsItemWrapperStyle = css`
+    display: flex;
+    width: 100%;
+`;
+
+const headerStyle = css`
+    font-size: 2.5vh;
+    text-decoration: underline;
+    margin-right: 10px;
+`;
+
+const statsListContainerStyle = css`
+    font-size: 2vh;
+    padding-top: 5px;
+    display: flex;
+`;
+
+const statsItemStyle = css`
+    margin-right: 10px;
+`;
+
+const arrowStyle = css`
+    height: 40px;
+    width: 40px;
+    font-size: 24px;
+    background: 'aliceblue';
+    border-radius: 50%;
+    text-align: center;
+    cursor: pointer;
+    margin-right: 10px;
+`;
+
+const progressBarStyle = css`
+    display: flex;
+    justify-content: left;
+    padding-top: 10px;
+    width: 30%;
+`;
+
+const progressBarLabelStyle = css`
+    font-size: 2vh;
+    margin-left: -10%;
+`;
+
+const extraStyleProgressBarStyle = css`
+    width: 50%;
+`;

@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import SearchBar from './Components/SearchBarComponent/SearchBar';
-import './App.css';
+import SearchBar from './Components/SearchBar';
 import { IUserInput } from './Common/interfaces';
-import MediaGrid from './Components/MediaGridComponent/MediaGrid';
-import Header from './Components/HeaderComponent/Header';
+import MediaGrid from './Components/MediaGrid';
+import Header from './Components/Header';
+/** @jsx jsx */
+import { jsx, css } from '@emotion/react';
 
 function App() {
   const [UserInput, setUserInput] = useState<IUserInput>({
@@ -14,7 +15,7 @@ function App() {
     setUserInput(a);    
   }
   return (
-    <div className="App">
+    <div css={container}>
       <Header/>
       <SearchBar SetUserInput={(a: IUserInput) => SetUserInput(a)}/>
       <MediaGrid SearchQuery={UserInput.SearchQuery}/>
@@ -23,3 +24,7 @@ function App() {
 }
 
 export default App;
+
+const container = css`
+  text-align: center;
+`;

@@ -1,16 +1,17 @@
 import React from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import ToolBar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
+/** @jsx jsx */
+import { jsx, css } from '@emotion/react';
 
 function Header() {
   return (
     <div className="App">
         <AppBar position='static' color='inherit'>
             <ToolBar>
-                <Typography variant='h5' color='inherit' style={{justifyContent:"center", fontSize:"3vh"}}>
+                <div css={topBarStyle}>
                     Pokemon's information from Generations I-VII 
-                </Typography>
+                </div>
             </ToolBar>
       </AppBar>
     </div>
@@ -18,3 +19,7 @@ function Header() {
 }
 
 export default Header;
+
+const topBarStyle = css`
+  font-size: 3vh;
+`;

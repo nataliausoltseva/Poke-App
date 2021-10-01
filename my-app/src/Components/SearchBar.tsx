@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Grid, TextField } from '@material-ui/core';
-import { IUserInput } from '../../Common/interfaces'
-import './SearchBar.css';
+import { IUserInput } from '../Common/interfaces'
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import Button from 'react-bootstrap/Button';
+/** @jsx jsx */
+import { jsx, css } from '@emotion/react';
 
 interface ISearchBarProps {
     SetUserInput: (a: IUserInput) => void;
@@ -59,16 +60,15 @@ function SearchBar(props: ISearchBarProps) {
             return;
         }
     }
-    return <div className="SearchBarContainer">
+    return <div css={containerStyle}>
         <Grid container spacing={1}>
-            <div>
-                
+            <div css={wrapperStyle}>
                 <Autocomplete
                     id="free-solo-demo"
                     freeSolo
                     options={arrayOfPokemongs}
                     getOptionLabel={(option) => option.name}
-                    style={{width: "35vh", paddingRight:10}}  
+                    css={extraStyleAutoCompleteStyle}
                     getOptionSelected={(option, value) => option.name === value.name}
                     onChange={(event, value)=> checkValue(value)}
                     renderInput={(params) =>
@@ -78,7 +78,7 @@ function SearchBar(props: ISearchBarProps) {
                         value={SearchQuery}
                         onChange={event => handleSearchQueryChange(event.target.value)}/>}
                 />
-                <Button variant="primary" size="sm" onClick={handleSubmit} style={{width:"6rem", height:50}}>
+                <Button variant="primary" size="sm" onClick={handleSubmit} css={searchButtonStyle}>
                     Search
                 </Button>
             </div>
@@ -86,3 +86,23 @@ function SearchBar(props: ISearchBarProps) {
     </div>
 }
 export default SearchBar
+
+const containerStyle = css`
+    margin: auto;
+    margin: 20px;
+`;
+
+const wrapperStyle = css`
+    margin: auto;
+    display: flex;
+    justify-content: center;
+`;
+
+const extraStyleAutoCompleteStyle = css`
+    width: 35vh;
+    padding-right: 10px;
+`;
+
+const searchButtonStyle = css`
+    width: 6rem;
+`;

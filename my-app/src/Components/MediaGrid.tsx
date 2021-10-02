@@ -283,6 +283,7 @@ const statsListContainerStyle = css`
 
 const statsItemStyle = css`
     margin-right: 10px;
+    white-space: nowrap;
 `;
 
 const arrowStyle = css`

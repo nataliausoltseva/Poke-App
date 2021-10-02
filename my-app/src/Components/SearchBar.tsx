@@ -8,6 +8,7 @@ import { jsx, css } from '@emotion/react';
 
 interface ISearchBarProps {
     SetUserInput: (a: IUserInput) => void;
+    darkMode: boolean;
 }
 interface PokemonsArray {
     name: string;
@@ -15,7 +16,7 @@ interface PokemonsArray {
 }
 
 function SearchBar(props: ISearchBarProps) {
-    const [SearchQuery, setSearchQuery] = useState("");
+    const [SearchQuery, setSearchQuery] = useState('');
     const handleSearchQueryChange = (s: string) => {
         var loweCaseString = s.toLowerCase()
         setSearchQuery(loweCaseString);
@@ -34,8 +35,15 @@ function SearchBar(props: ISearchBarProps) {
                 setArrayOfPokemons(pokemons);
                 
             })
-// eslint-disable-next-line
-    }, [SearchQuery]);  
+
+    }, []);  
+    
+    useEffect(() => {
+        if (SearchQuery) {
+            handleSubmit();
+        }
+    }, [SearchQuery]);
+
     const handleSubmit = () => {
         if (arrayOfPokemongs.some(item => item.name === SearchQuery)) {
             let UserInput: IUserInput = {
@@ -68,19 +76,16 @@ function SearchBar(props: ISearchBarProps) {
                     freeSolo
                     options={arrayOfPokemongs}
                     getOptionLabel={(option) => option.name}
-                    css={extraStyleAutoCompleteStyle}
+                    css={extraStyleAutoCompleteStyle(props.darkMode)}
                     getOptionSelected={(option, value) => option.name === value.name}
                     onChange={(event, value)=> checkValue(value)}
                     renderInput={(params) =>
                     <TextField {...params}
                         label="Pokemon's name"
                         error={HasFocus && SearchQuery===""}
-                        value={SearchQuery}
+                        {...SearchQuery && {value: SearchQuery}}
                         onChange={event => handleSearchQueryChange(event.target.value)}/>}
                 />
-                <Button variant="primary" size="sm" onClick={handleSubmit} css={searchButtonStyle}>
-                    Search
-                </Button>
             </div>
         </Grid>
     </div>
@@ -98,11 +103,21 @@ const wrapperStyle = css`
     justify-content: center;
 `;
 
-const extraStyleAutoCompleteStyle = css`
+const extraStyleAutoCompleteStyle = (darkMode: boolean) => css`
     width: 35vh;
     padding-right: 10px;
-`;
 
-const searchButtonStyle = css`
-    width: 6rem;
+    ${darkMode && css`
+        .MuiInputLabel-root, .MuiInputLabel-root {
+            color: white !important;
+           
+        }
+        .MuiInput-underline:before {
+            border-bottom-color: white !important;
+        }
+        .MuiInput-underline:after {
+            border-bottom-color: white !important;
+        }
+    `};
+
 `;

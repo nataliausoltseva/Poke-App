@@ -22,7 +22,6 @@ const AutoComplete = (props: Props) => {
     const suggestionsRef = useRef(null);
 
     const onChange = useCallback((event) => {
-        console.log('onCLick?')
         const userInput = event.target.value;
 
         const unLinked = props.options.filter(option =>
@@ -120,7 +119,6 @@ const inputStyle = (hasFocus: boolean, isDarkMode: boolean) => css`
     border-radius: 4px;
     border: none;
 
-
     :focus {
         padding-top: 15px;
     }
@@ -133,7 +131,6 @@ const inputStyle = (hasFocus: boolean, isDarkMode: boolean) => css`
     ${!isDarkMode && css`
         border: grey 2px solid;
     `}
-
 `;
 
 const placeholderStyle = (hasFocus: boolean, isHidden: boolean) => css`

@@ -9,16 +9,18 @@ interface Props {
 }
 
 const MediaGridItem = (props: Props) => {
-    return (
+    return !!props.items.length ? (
         <div css={statsItemWrapperStyle}>
             <div css={headerStyle}>
                 {pluralise(props.header, props.items.length)}:
             </div>
             <div css={statsListContainerStyle}>
-                {props.items.map((item,i)=>
-                    <div key={i} css={statsItemStyle}>{i === props.items.length - 1 ? item : `${item},`}</div>)}  
+                {props.items.map((item, i) =>
+                    <div key={i} css={statsItemStyle}>{i === props.items.length - 1 ? item : `${item},`}</div>)}
             </div>
         </div>
+    ) : (
+        <React.Fragment />
     )
 };
 

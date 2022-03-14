@@ -117,7 +117,7 @@ const suggestionsContainerStyle = css`
     overflow: auto;
     max-height: 300px;
     min-height: 45px;
-    width: 200px;
+    width: 250px;
     padding-top: 10px;
     border-radius: 4px;
     background: white;
@@ -129,6 +129,7 @@ const inputStyle = (hasFocus: boolean, isDarkMode: boolean) => css`
     padding: 9px;
     border-radius: 4px;
     border: none;
+    width: 250px;
 
     :focus {
         padding-top: 15px;

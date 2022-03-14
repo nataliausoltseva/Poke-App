@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 /** @jsx jsx */
 import { jsx, css } from '@emotion/react';
 
 import AutoComplete from './AutoComplete';
+import { join } from 'path';
 interface ISearchBarProps {
     setUserInput: (value: string) => void;
     darkMode: boolean;
@@ -19,20 +20,42 @@ const SearchBar = (props: ISearchBarProps) => {
     useEffect(() => {
         fetch('https://pokeapi.co/api/v2/pokemon?limit=1500')
             .then(res => res.json())
-            .then(res => setArrayOfPokemons(res.results));
+            .then(res => {
+                console.log(res.results);
+                setArrayOfPokemons(res.results);
+            });
     }, []);
 
-    const onSubmit = useCallback((userInput) => {
-        if (arrayOfPokemons.find(item => item.name === userInput)) {
-            props.setUserInput(userInput);
+    const filteredPokemonNames = useMemo(() => {
+        return arrayOfPokemons.map(pokemon => pokemon.name).map(name => {
+            const splitName = name.split('-');
+            // The name most likely has its form name
+            if (splitName.length > 2) {
+                if (splitName.includes('gmax')) {
+                   return `gigantamax ${splitName[0]}`;
+                }
+                    return splitName[0];
+            } else if (splitName.length === 2) {
+                if (splitName.includes('gmax')) {
+                    return `gigantamax ${splitName[0]}`;
+                }
+               return `${splitName[0]} ${splitName[1]}`;
+            }
+            return name;
+        });
+    }, [arrayOfPokemons]);
 
+    const onSubmit = useCallback((userInput) => {
+        const indexName = filteredPokemonNames.findIndex(name => name === userInput);
+        if (arrayOfPokemons[indexName]) {
+            props.setUserInput(userInput);
         }
-    }, [arrayOfPokemons, props]);
+    }, [arrayOfPokemons, props, filteredPokemonNames]);
 
     return <div css={containerStyle}>
         <div css={wrapperStyle}>
             <AutoComplete
-                options={arrayOfPokemons.map(pokemon => pokemon.name)}
+                options={filteredPokemonNames}
                 onSelection={onSubmit}
                 placeholder={'Pokemon'}
                 darkMode={props.darkMode}

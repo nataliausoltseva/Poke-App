@@ -58,7 +58,6 @@ const AutoComplete = (props: Props) => {
     const clearInput = useCallback(() => {
         setInput('');
         setFilteredSuggestions(props.options);
-        props.onSelection('');
     }, [props]);
 
     const onKeyDown = useCallback((event) => {
@@ -84,6 +83,7 @@ const AutoComplete = (props: Props) => {
                 css={inputStyle(showSuggestions, props.darkMode)}
                 onFocus={onClick}
                 onKeyDown={onKeyDown}
+                data-testid="element-to-focus"
             />
             <span css={placeholderStyle(showSuggestions, !!input)}>{props.placeholder}</span>
             <img src={closeIcon} alt={'clear'} css={closeIconStyle(showSuggestions)} onClick={clearInput} />

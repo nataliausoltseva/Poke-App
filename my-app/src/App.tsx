@@ -12,7 +12,7 @@ const App = () => {
   return (
     <div css={container(darkMode)}>
       <Header onDarkMode={setDarkMode} />
-      <SearchBar setUserInput={setUserInput} darkMode={darkMode}/>
+      <SearchBar setUserInput={setUserInput} darkMode={darkMode} />
       <MediaGrid searchInput={userInput} />
     </div>
   );
@@ -21,7 +21,8 @@ const App = () => {
 export default App;
 
 const container = (darkMode: boolean) => css`
-text-align: center;
+  text-align: center;
+  height: 100vh;
   ${darkMode && css`
     background: #5a4f7c;
     color: white;

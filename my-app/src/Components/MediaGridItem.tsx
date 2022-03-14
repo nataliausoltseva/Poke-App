@@ -8,8 +8,8 @@ interface Props {
     items: string[],
 }
 
-const MediaGridItem = (props: Props) => {
-    return !!props.items.length ? (
+const MediaGridItem = (props: Props) => (
+    !!props.items.length ? (
         <div css={statsItemWrapperStyle}>
             <div css={headerStyle}>
                 {pluralise(props.header, props.items.length)}:
@@ -22,7 +22,7 @@ const MediaGridItem = (props: Props) => {
     ) : (
         <React.Fragment />
     )
-};
+);
 
 export default MediaGridItem;
 

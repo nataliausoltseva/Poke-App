@@ -7,18 +7,15 @@ interface Props {
     onSelection: (value: React.MouseEvent) => void,
 }
 
-const SuggestionList = (props: Props) => {
-
-    return (
-        <div>
-            {props.filteredSuggestions.map((suggestion, index) => (
-                <div key={`s-${index}`} onClick={props.onSelection} css={suggestionStyle}>
-                    {suggestion}
-                </div>
-            ))}
-        </div>
-    )
-}
+const SuggestionList = (props: Props) => (
+    <div>
+        {props.filteredSuggestions.map((suggestion, index) => (
+            <div key={`s-${index}`} onClick={props.onSelection} css={suggestionStyle}>
+                {suggestion}
+            </div>
+        ))}
+    </div>
+);
 
 export default SuggestionList;
 

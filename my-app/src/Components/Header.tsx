@@ -5,6 +5,8 @@ import Sun from '../icons/sun.svg';
 /** @jsx jsx */
 import { jsx, css } from '@emotion/react';
 
+import TopBar from './TopBar';
+
 interface Props {
   onDarkMode: (value: boolean) => void;
 }
@@ -35,10 +37,7 @@ const Header = (props: Props) => {
 
   return (
     <div css={appBarStyles(darkModeSwitch)}>
-      <ToolBar>
-        <div css={topBarStyle}>
-          Pokemon's information from Generations I-VII
-        </div>
+      <TopBar>
         <div css={switcherContaineryStyle} onClick={handleSwitch}>
           <input type="checkbox" css={checkboxStyle} />
           <span css={sliderStyle(darkModeSwitch)} />
@@ -46,7 +45,7 @@ const Header = (props: Props) => {
             <img src={darkModeSwitch ? Moon : Sun} css={iconStyle(darkModeSwitch)} alt={'darkmodeSwitch'} />
           </div>
         </div>
-      </ToolBar>
+      </TopBar>
     </div>
   );
 }
@@ -66,10 +65,6 @@ const appBarStyles = (darkModeSwitch: boolean) => css`
     color: white;
     background-color: #5a4f7c !important;
   `};
-`;
-
-const topBarStyle = css`
-  font-size: 3vh;
 `;
 
 const switcherContaineryStyle = css`

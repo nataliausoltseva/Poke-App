@@ -36,6 +36,7 @@ function MediaGrid(props: IMediaGridProps) {
         fetch('https://pokeapi.co/api/v2/pokemon/' + props.searchInput)
             .then(response => response.json())
             .then(response => {
+                console.log(response)
                 setPokemonAbilities(response.abilities.map((ability: { ability: Abilities }) => ability.ability));
                 setPokemonTypes(response.types.map((type: { type: Types }) => type.type));
                 setPokemonMoves(response.moves.map((move: { move: Moves }) => move.move));
@@ -55,6 +56,7 @@ function MediaGrid(props: IMediaGridProps) {
     const front_default = `https://img.pokemondb.net/sprites/home/normal/${props.searchInput}.png`;
     const front_shiny = `https://img.pokemondb.net/sprites/home/shiny/${props.searchInput}.png`;
 
+    // TODO need a better way to find the generation. Check API first
     let generationIn = "";
     for (var index = 0; index < 900; index++) {
         if (pokeID === 0 || pokeID <= 151) {
@@ -86,7 +88,7 @@ function MediaGrid(props: IMediaGridProps) {
     const percentage_rounded = (Math.round(pokeCaptureRate * 100 / 255).toFixed(0));
 
     return (
-        <div id="div1" css={containerStyle}>
+        <div css={containerStyle}>
             <div css={pokemonNameContainerStyle}>
                 <h2 css={pokemonNameStyle}>{props.searchInput}</h2>
                 <h5>Index: {JSON.stringify(pokeID)}</h5>

@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import AppBar from '@material-ui/core/AppBar';
 import ToolBar from '@material-ui/core/Toolbar';
 import Moon from '../icons/moon.svg';
 import Sun from '../icons/sun.svg';
@@ -26,30 +25,28 @@ const Header = (props: Props) => {
 
     props.onDarkMode(darkModeSwitch);
 
-  }, [darkModeSwitch, window.localStorage]);
+  }, [darkModeSwitch, props]);
 
   useEffect(() => {
     if (window.localStorage?.pokeDarkMode) {
       setDarkModeSwitch(true);
     }
-  }, [window.localStorage]);
+  }, []);
 
   return (
-    <div>
-        <div css={appBarStyles(darkModeSwitch)}>
-            <ToolBar>
-                <div css={topBarStyle}>
-                    Pokemon's information from Generations I-VII 
-                </div>
-                <div css={switcherContaineryStyle} onClick={handleSwitch}>
-                  <input type="checkbox" css={checkboxStyle}/>
-                  <span css={sliderStyle(darkModeSwitch)}/>
-                  <div css={lightModeIconStyle(darkModeSwitch)}>
-                    <img src={darkModeSwitch ? Moon : Sun} css={iconStyle(darkModeSwitch)} />
-                    </div>
-                </div>
-            </ToolBar>
-      </div>
+    <div css={appBarStyles(darkModeSwitch)}>
+      <ToolBar>
+        <div css={topBarStyle}>
+          Pokemon's information from Generations I-VII
+        </div>
+        <div css={switcherContaineryStyle} onClick={handleSwitch}>
+          <input type="checkbox" css={checkboxStyle} />
+          <span css={sliderStyle(darkModeSwitch)} />
+          <div css={lightModeIconStyle(darkModeSwitch)}>
+            <img src={darkModeSwitch ? Moon : Sun} css={iconStyle(darkModeSwitch)} alt={'darkmodeSwitch'} />
+          </div>
+        </div>
+      </ToolBar>
     </div>
   );
 }
@@ -93,7 +90,7 @@ const checkboxStyle = css`
   }
 `;
 
-const sliderStyle = ( darkModeSwitch: boolean ) => css`
+const sliderStyle = (darkModeSwitch: boolean) => css`
   position: absolute;
   cursor: pointer;
   top: 0;
@@ -125,7 +122,7 @@ const sliderStyle = ( darkModeSwitch: boolean ) => css`
   }
 `;
 
-const lightModeIconStyle = ( darkModeSwitch: boolean ) => css`
+const lightModeIconStyle = (darkModeSwitch: boolean) => css`
   position: absolute;
 
   ${darkModeSwitch ? css`
@@ -139,7 +136,7 @@ const lightModeIconStyle = ( darkModeSwitch: boolean ) => css`
   `};
 `;
 
-const iconStyle = ( darkModeSwitch: boolean ) => css`
+const iconStyle = (darkModeSwitch: boolean) => css`
   ${darkModeSwitch ? css`
     width: 10px;
     height: auto;

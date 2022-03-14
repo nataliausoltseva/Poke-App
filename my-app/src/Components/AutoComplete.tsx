@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 /** @jsx jsx */
 import { jsx, css } from '@emotion/react';
 
@@ -30,9 +30,7 @@ const AutoComplete = (props: Props) => {
         setInput(event.target.value);
         setFilteredSuggestions(unLinked);
         setShowSuggestions(true);
-
-        props.onSelection(event.target.value);
-    }, [props.options]);
+    }, [props]);
 
     const onClick = useCallback((event) => {
         if (!input) {
@@ -44,14 +42,14 @@ const AutoComplete = (props: Props) => {
             setFilteredSuggestions(unLinked);
         }
         setShowSuggestions(true);
-    }, [props.options]);
+    }, [props.options, input]);
 
     const onOptionSelection = useCallback((event) => {
         setInput(event.target.innerText);
         setFilteredSuggestions([]);
         setShowSuggestions(false);
         props.onSelection(event.target.innerText);
-    }, []);
+    }, [props]);
 
     const handleClickOutside = useCallback(() => {
         setShowSuggestions(false);
@@ -61,7 +59,19 @@ const AutoComplete = (props: Props) => {
         setInput('');
         setFilteredSuggestions(props.options);
         props.onSelection('');
-    }, [props.options]);
+    }, [props]);
+
+    const onKeyDown = useCallback((event) => {
+        if (event.key === 'Enter') {
+            const userInput = event.target.value;
+            if (filteredSuggestions.includes(userInput)) {
+                props.onSelection(userInput);
+                setInput(userInput);
+                setShowSuggestions(false);
+                event.target.blur();
+            }
+        }
+    }, [filteredSuggestions, props]);
 
     useOnClickOutside(suggestionsRef, handleClickOutside)
 
@@ -70,13 +80,14 @@ const AutoComplete = (props: Props) => {
             <input
                 type="text"
                 onChange={onChange}
-                onClick={onClick}
                 value={input}
                 css={inputStyle(showSuggestions, props.darkMode)}
+                onFocus={onClick}
+                onKeyDown={onKeyDown}
             />
             <span css={placeholderStyle(showSuggestions, !!input)}>{props.placeholder}</span>
-            <img src={closeIcon} css={closeIconStyle(showSuggestions)} onClick={clearInput} />
-            <img src={chevronIcon} css={chevronIconStyle(showSuggestions)} />
+            <img src={closeIcon} alt={'clear'} css={closeIconStyle(showSuggestions)} onClick={clearInput} />
+            <img src={chevronIcon} alt={'chevron'} css={chevronIconStyle(showSuggestions)} />
             {showSuggestions && (
                 filteredSuggestions.length ? (
                     <div css={suggestionsContainerStyle}>

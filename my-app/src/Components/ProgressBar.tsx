@@ -23,7 +23,7 @@ const ProgressBar = (props: Props) => {
     const colour = useMemo(() => {
         let colour = '';
         Object.keys(PROGRESS_COLOURS).forEach(key => {
-            if (parseInt(key) < props.percentage ) {
+            if (parseInt(key) < props.percentage) {
                 colour = PROGRESS_COLOURS[key];
             }
         });

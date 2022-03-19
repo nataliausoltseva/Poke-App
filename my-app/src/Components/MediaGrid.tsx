@@ -2,44 +2,48 @@ import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 /** @jsx jsx */
 import { jsx, css } from '@emotion/react';
+import { isEmpty } from 'lodash';
 
 import MediaGridItem from './MediaGridItem';
 import ProgressBar from './ProgressBar';
 
-interface Abilities {
+interface DefaultItemProps {
     name: string;
     url: string;
 }
-interface Types {
-    name: string;
-    url: string;
-}
-interface Moves {
-    name: string;
-    url: string;
+
+interface Filters {
+    types: string[],
+    generations: string[]
 }
 
 interface IMediaGridProps {
-    searchInput: string|null;
+    searchInput: string | null,
+    filters: Filters,
+}
+
+interface PokemonByFilters {
+    name: string,
+    pokemons: DefaultItemProps[]
 }
 
 function MediaGrid(props: IMediaGridProps) {
-    const [pokemonAbilities, setPokemonAbilities] = useState<Abilities[]>([{ name: "", url: "" }])
-    const [pokemonMoves, setPokemonMoves] = useState<Moves[]>([{ name: "", url: "" }])
-    const [pokemonTypes, setPokemonTypes] = useState<Types[]>([{ name: "", url: "" }])
+    const [pokemonAbilities, setPokemonAbilities] = useState<DefaultItemProps[]>([{ name: "", url: "" }])
+    const [pokemonMoves, setPokemonMoves] = useState<DefaultItemProps[]>([{ name: "", url: "" }])
+    const [pokemonTypes, setPokemonTypes] = useState<DefaultItemProps[]>([{ name: "", url: "" }])
     const [pokeID, setPokeID] = useState(0);
     const [pokeWeight, setPokeWeight] = useState(0);
     const [pokeHeight, setPokeHeight] = useState(0);
     const [pokeCaptureRate, setPokeCaptureRate] = useState(0);
+    const [pokemonsByTypes, setPokemonsByTypes] = useState<PokemonByFilters[]>([]);
 
     useEffect(() => {
         fetch('https://pokeapi.co/api/v2/pokemon/' + props.searchInput)
             .then(response => response.json())
             .then(response => {
-                console.log(response)
-                setPokemonAbilities(response.abilities.map((ability: { ability: Abilities }) => ability.ability));
-                setPokemonTypes(response.types.map((type: { type: Types }) => type.type));
-                setPokemonMoves(response.moves.map((move: { move: Moves }) => move.move));
+                setPokemonAbilities(response.abilities.map((ability: { ability: DefaultItemProps }) => ability.ability));
+                setPokemonTypes(response.types.map((type: { type: DefaultItemProps }) => type.type));
+                setPokemonMoves(response.moves.map((move: { move: DefaultItemProps }) => move.move));
                 setPokeID(response.id);
                 setPokeHeight(response.height / 10);
                 setPokeWeight(response.weight / 10);
@@ -51,6 +55,31 @@ function MediaGrid(props: IMediaGridProps) {
                 setPokeCaptureRate(response.capture_rate);
             });
 
+    }, [props]);
+
+    useEffect(() => {
+        // Make sure we have some filters set
+        if (Object.values(props.filters).some(filter => filter.length)) {
+            Object.entries(props.filters).forEach(([key, value]) => {
+                // Make sure the arrya is not empty as one of the filters can be empty
+                if (value.length) {
+                    if (key === 'types') {
+                        value.forEach((filter: any) => {
+                            fetch(`https://pokeapi.co/api/v2/type/${filter}`)
+                                .then(response => response.json())
+                                .then(response => {
+                                    setPokemonsByTypes(prevState => {
+                                        const newFilter = { ...prevState }
+                                        newFilter[filter] = response.pokemon;
+                                        return newFilter;
+                                    });
+                                })
+                        })
+                    }
+                }
+
+            });
+        }
     }, [props]);
 
     const front_default = `https://img.pokemondb.net/sprites/home/normal/${props.searchInput}.png`;
@@ -89,51 +118,57 @@ function MediaGrid(props: IMediaGridProps) {
 
     return (
         <div css={containerStyle}>
-            <div css={pokemonNameContainerStyle}>
-                <h2 css={pokemonNameStyle}>{props.searchInput}</h2>
-                <h5>Index: {JSON.stringify(pokeID)}</h5>
-                <h5>Generation: {generationIn}</h5>
-            </div>
-            <div css={pokemonInfoWrapperStyle}>
-                <div css={imageCardsContainerStyle}>
-                    <img src={front_default} alt="Pokemon's normal form" />
-                    <div css={cardHeaderStyle}>
-                        {props.searchInput}'s Normal Form
+            {Object.values(props.filters).some(filter => filter.length) ? (
+                "NO SUPPORT"
+            ) : (
+                <React.Fragment>
+                    <div css={pokemonNameContainerStyle}>
+                        <h2 css={pokemonNameStyle}>{props.searchInput}</h2>
+                        <h5>Index: {JSON.stringify(pokeID)}</h5>
+                        <h5>Generation: {generationIn}</h5>
                     </div>
-                    <br />
-                    <img src={front_shiny} alt="Pokemon's shiny form" />
-                    <div css={cardHeaderStyle}>
-                        {props.searchInput}'s Shiny Form
+                    <div css={pokemonInfoWrapperStyle}>
+                        <div css={imageCardsContainerStyle}>
+                            <img src={front_default} alt="Pokemon's normal form" />
+                            <div css={cardHeaderStyle}>
+                                {props.searchInput}'s Normal Form
+                            </div>
+                            <br />
+                            <img src={front_shiny} alt="Pokemon's shiny form" />
+                            <div css={cardHeaderStyle}>
+                                {props.searchInput}'s Shiny Form
+                            </div>
+                        </div>
+                        <br />
+                        <div css={statsContainerStyle}>
+                            <MediaGridItem
+                                header={'Ability'}
+                                items={pokemonAbilities.map(ability => ability.name)}
+                            />
+                            <MediaGridItem
+                                header={'Type'}
+                                items={pokemonTypes.map(type => type.name)}
+                            />
+                            <MediaGridItem
+                                header={"Height"}
+                                items={[`${pokeHeight} m`]}
+                            />
+                            <MediaGridItem
+                                header={"Weight"}
+                                items={[`${pokeWeight} kg`]}
+                            />
+                            <ProgressBar
+                                header={"Capture rate: "}
+                                percentage={parseInt(percentage_rounded)}
+                            />
+                            <MediaGridItem
+                                header={'Move'}
+                                items={pokemonMoves.map(type => type.name)}
+                            />
+                        </div>
                     </div>
-                </div>
-                <br />
-                <div css={statsContainerStyle}>
-                    <MediaGridItem
-                        header={'Ability'}
-                        items={pokemonAbilities.map(ability => ability.name)}
-                    />
-                    <MediaGridItem
-                        header={'Type'}
-                        items={pokemonTypes.map(type => type.name)}
-                    />
-                    <MediaGridItem
-                        header={"Height"}
-                        items={[`${pokeHeight} m`]}
-                    />
-                    <MediaGridItem
-                        header={"Weight"}
-                        items={[`${pokeWeight} kg`]}
-                    />
-                    <ProgressBar
-                        header={"Capture rate: "}
-                        percentage={parseInt(percentage_rounded)}
-                    />
-                    <MediaGridItem
-                        header={'Move'}
-                        items={pokemonMoves.map(type => type.name)}
-                    />
-                </div>
-            </div>
+                </React.Fragment>
+            )}
         </div>
     );
 }

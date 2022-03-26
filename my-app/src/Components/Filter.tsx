@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useRef, useState, memo } from 'react';
 /** @jsx jsx */
 import { jsx, css } from '@emotion/react';
 
@@ -24,8 +24,6 @@ const Filter = (props: Props) => {
     const handleClickOutside = useCallback(() => {
         setShowFilters(false);
     }, []);
-
-    console.log(props.filters.some(filter => filter.selectedOptions.length))
 
     useOnClickOutside(containerRef, handleClickOutside)
     return (
@@ -55,7 +53,7 @@ const Filter = (props: Props) => {
     )
 }
 
-export default Filter;
+export default memo(Filter);
 
 const containerStyle = css`
     position: relative;

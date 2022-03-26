@@ -1,30 +1,38 @@
-import React from 'react';
+import React, { memo } from 'react';
 /** @jsx jsx */
 import { jsx, css } from '@emotion/react';
 import pluralise from 'pluralize';
 
-interface Props {
+interface ItemProps {
     header: string,
-    items: string[],
+    options: string[],
+}
+
+interface Props {
+    items: ItemProps[]
 }
 
 const MediaGridItem = (props: Props) => (
     !!props.items.length ? (
-        <div css={statsItemWrapperStyle}>
-            <div css={headerStyle}>
-                {pluralise(props.header, props.items.length)}:
-            </div>
-            <div css={statsListContainerStyle}>
-                {props.items.map((item, i) =>
-                    <div key={i} css={statsItemStyle}>{i === props.items.length - 1 ? item : `${item},`}</div>)}
-            </div>
+        <div>
+            {props.items.map((item, itemIndex) => (
+                <div key={itemIndex} css={statsItemWrapperStyle}>
+                    <div css={headerStyle}>
+                        {pluralise(item.header, item.options.length)}:
+                    </div>
+                    <div css={statsListContainerStyle}>
+                        {item.options.map((option, i) =>
+                            <div key={i} css={statsItemStyle}>{i === item.options.length - 1 ? option : `${option},`}</div>)}
+                    </div>
+                </div>
+            ))}
         </div>
     ) : (
         <React.Fragment />
     )
 );
 
-export default MediaGridItem;
+export default memo(MediaGridItem);
 
 const statsItemWrapperStyle = css`
     display: flex;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 /** @jsx jsx */
 import { jsx, css } from '@emotion/react';
@@ -142,28 +142,32 @@ function MediaGrid(props: IMediaGridProps) {
                         <br />
                         <div css={statsContainerStyle}>
                             <MediaGridItem
-                                header={'Ability'}
-                                items={pokemonAbilities.map(ability => ability.name)}
-                            />
-                            <MediaGridItem
-                                header={'Type'}
-                                items={pokemonTypes.map(type => type.name)}
-                            />
-                            <MediaGridItem
-                                header={"Height"}
-                                items={[`${pokeHeight} m`]}
-                            />
-                            <MediaGridItem
-                                header={"Weight"}
-                                items={[`${pokeWeight} kg`]}
+                                items={[
+                                    {
+                                        header: 'Ability',
+                                        options: pokemonAbilities.map(ability => ability.name)
+                                    },
+                                    {
+                                        header: 'Type',
+                                        options: pokemonTypes.map(type => type.name)
+                                    },
+                                    {
+                                        header: 'Height',
+                                        options: [`${pokeHeight} m`]
+                                    }, 
+                                    {
+                                        header: 'Weight',
+                                        options: [`${pokeWeight} kg`]
+                                    },
+                                    {
+                                        header: 'Move',
+                                        options: pokemonMoves.map(type => type.name)
+                                    }
+                                ]}
                             />
                             <ProgressBar
                                 header={"Capture rate: "}
                                 percentage={parseInt(percentage_rounded)}
-                            />
-                            <MediaGridItem
-                                header={'Move'}
-                                items={pokemonMoves.map(type => type.name)}
                             />
                         </div>
                     </div>
@@ -173,7 +177,8 @@ function MediaGrid(props: IMediaGridProps) {
     );
 }
 
-export default MediaGrid
+
+export default memo(MediaGrid);
 
 const containerStyle = css`
     margin-left: 10px

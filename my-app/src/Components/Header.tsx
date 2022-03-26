@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { memo, useCallback, useEffect, useState } from 'react';
 import ToolBar from '@material-ui/core/Toolbar';
 import Moon from '../icons/moon.svg';
 import Sun from '../icons/sun.svg';
@@ -50,7 +50,7 @@ const Header = (props: Props) => {
   );
 }
 
-export default Header;
+export default memo(Header);
 
 const appBarStyles = (darkModeSwitch: boolean) => css`
   position: static;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo, SetStateAction } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, memo, useRef } from 'react';
 /** @jsx jsx */
 import { jsx, css } from '@emotion/react';
 
@@ -23,16 +23,15 @@ interface Filters {
 }
 
 const SearchBar = (props: ISearchBarProps) => {
-    const [arrayOfPokemons, setArrayOfPokemons] = useState<PokemonsArray[]>([{ name: "", url: "" }]);
+    const [arrayOfPokemons, setArrayOfPokemons] = useState<PokemonsArray[]>([]);
     const [filters, setFilters] = useState<Filters>({ types: [], generations: [] });
+
+    const userInputHolder = useRef("");
 
     useEffect(() => {
         fetch('https://pokeapi.co/api/v2/pokemon?limit=1500')
             .then(res => res.json())
-            .then(res => {
-                console.log(res.results);
-                setArrayOfPokemons(res.results);
-            });
+            .then(res => setArrayOfPokemons(res.results));
     }, []);
 
     const filteredPokemonNames = useMemo(() => {
@@ -56,8 +55,9 @@ const SearchBar = (props: ISearchBarProps) => {
 
     const onSubmit = useCallback((userInput) => {
         const indexName = filteredPokemonNames.findIndex(name => name === userInput);
-        if (arrayOfPokemons[indexName]) {
+        if (arrayOfPokemons[indexName] && userInputHolder.current !== userInput) {
             props.setUserInput(userInput);
+            userInputHolder.current = userInput;
         }
     }, [arrayOfPokemons, props, filteredPokemonNames]);
 
@@ -84,8 +84,6 @@ const SearchBar = (props: ISearchBarProps) => {
             return newFilters
         });
     }, [props]);
-
-    console.log(filters)
 
     return <div css={containerStyle}>
         <div css={wrapperStyle}>
@@ -115,7 +113,7 @@ const SearchBar = (props: ISearchBarProps) => {
     </div>
 };
 
-export default SearchBar
+export default memo(SearchBar)
 
 const containerStyle = css`
     margin: auto;

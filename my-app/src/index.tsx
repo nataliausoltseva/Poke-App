@@ -4,6 +4,14 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
+if (process.env.REACT_APP_WDYR === 'true') {
+  const whyDidYouRender = require('@welldone-software/why-did-you-render')
+  whyDidYouRender(React, {
+    trackAllPureComponents: true,
+    trackHooks: true,
+  });
+}
+
 ReactDOM.render(
   <React.StrictMode>
     <App />

@@ -58,6 +58,7 @@
     "@types/pluralize": "^0.0.29",
     "@types/react": "^17.0.40",
     "@types/react-alert": "^5.2.0",
-    "@types/react-autocomplete": "^1.8.5"
+    "@types/react-autocomplete": "^1.8.5",
+    "@welldone-software/why-did-you-render": "^6.2.3"
   }
 }

@@ -37,8 +37,8 @@ const Filter = (props: Props) => {
                                 <div css={filterLabelStyle}>{filter.label}</div>
                                 <div css={optionsContainers}>
                                     {filter.options.map((option, oIndex) => (
-                                        <div key={oIndex} css={optionContainerStyle}>
-                                            <input type="checkbox" value={option} onChange={() => filter.onSelection(option)} checked={filter.selectedOptions.includes(option)} />
+                                        <div key={oIndex} css={optionContainerStyle} onClick={() => filter.onSelection(option)}>
+                                            <input type="checkbox" value={option} checked={filter.selectedOptions.includes(option)} />
                                             {option}
                                         </div>
 
@@ -86,7 +86,7 @@ const optionsContainers = css`
 const optionContainerStyle = css`
     display: flex;
     align-items: center;
-    margin-left: 10px;  
+    margin-left: 10px; 
 
     input {
       margin-right: 15px;  

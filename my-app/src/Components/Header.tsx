@@ -1,5 +1,4 @@
 import React, { memo, useCallback, useEffect, useState } from 'react';
-import ToolBar from '@material-ui/core/Toolbar';
 import Moon from '../icons/moon.svg';
 import Sun from '../icons/sun.svg';
 /** @jsx jsx */

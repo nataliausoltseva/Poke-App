@@ -110,11 +110,14 @@ function MediaGrid(props: IMediaGridProps) {
                             items={[
                                 {
                                     header: 'Ability',
-                                    options: pokemonAbilities.map(ability => ability.name)
+                                    options: pokemonAbilities.map(ability => ability.name),
+                                    usePagination: pokemonAbilities.length > 10,
+
                                 },
                                 {
                                     header: 'Type',
-                                    options: pokemonTypes.map(type => type.name)
+                                    options: pokemonTypes.map(type => type.name),
+                                    usePagination: pokemonTypes.length > 10,
                                 },
                                 {
                                     header: 'Height',
@@ -126,7 +129,8 @@ function MediaGrid(props: IMediaGridProps) {
                                 },
                                 {
                                     header: 'Move',
-                                    options: pokemonMoves.map(type => type.name)
+                                    options: pokemonMoves.map(type => type.name),
+                                    usePagination: pokemonMoves.length > 10,
                                 }
                             ]}
                         />

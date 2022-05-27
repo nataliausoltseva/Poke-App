@@ -80,7 +80,7 @@ const AutoComplete = (props: Props) => {
                 type="text"
                 onChange={onChange}
                 value={input}
-                css={inputStyle(showSuggestions, props.darkMode)}
+                css={inputStyle(props.darkMode)}
                 onFocus={onClick}
                 onKeyDown={onKeyDown}
                 data-testid="element-to-focus"
@@ -125,11 +125,12 @@ const suggestionsContainerStyle = css`
     box-shadow: rgb(0 0 0 / 20%) 1px 1px 10px; 
 `;
 
-const inputStyle = (hasFocus: boolean, isDarkMode: boolean) => css`
+const inputStyle = (isDarkMode: boolean) => css`
     padding: 9px;
     border-radius: 4px;
     border: none;
     width: 250px;
+    max-height: 42px;
 
     :focus {
         padding-top: 15px;
@@ -170,7 +171,7 @@ const placeholderStyle = (hasFocus: boolean, isHidden: boolean) => css`
 const closeIconStyle = (hasInput: boolean) => css`
     position: absolute;
     margin-left: -45px;
-    top: 16px;
+    top: 13px;
     width: 20px;
     pointer-events: none;
     ${hasInput ? css`
@@ -190,7 +191,7 @@ const chevronIconStyle = (isExpanded: boolean) => css`
 
     ${isExpanded && css`
         transform: rotate(180deg);
-        top: 14px;
+        top: 10px;
     `}
 `;
 

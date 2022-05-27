@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo, memo, useRef } from 'react';
+import React, { useState, useCallback, useMemo, memo, useRef } from 'react';
 /** @jsx jsx */
 import { jsx, css } from '@emotion/react';
 
@@ -10,6 +10,7 @@ interface ISearchBarProps {
     setUserInput: (value: string) => void;
     darkMode: boolean;
     onFilterSelection: (value: Filters) => void,
+    arrayOfPokemons: PokemonsArray[]
 }
 
 interface PokemonsArray {
@@ -23,19 +24,13 @@ interface Filters {
 }
 
 const SearchBar = (props: ISearchBarProps) => {
-    const [arrayOfPokemons, setArrayOfPokemons] = useState<PokemonsArray[]>([]);
     const [filters, setFilters] = useState<Filters>({ types: [], generations: [] });
 
     const userInputHolder = useRef("");
 
-    useEffect(() => {
-        fetch('https://pokeapi.co/api/v2/pokemon?limit=1500')
-            .then(res => res.json())
-            .then(res => setArrayOfPokemons(res.results));
-    }, []);
 
     const filteredPokemonNames = useMemo(() => {
-        return arrayOfPokemons.map(pokemon => pokemon.name).map(name => {
+        return props.arrayOfPokemons.map(pokemon => pokemon.name).map(name => {
             const splitName = name.split('-');
             // The name most likely has its form name
             if (splitName.length > 2) {
@@ -51,15 +46,15 @@ const SearchBar = (props: ISearchBarProps) => {
             }
             return name;
         });
-    }, [arrayOfPokemons]);
+    }, [props.arrayOfPokemons]);
 
     const onSubmit = useCallback((userInput) => {
         const indexName = filteredPokemonNames.findIndex(name => name === userInput);
-        if (arrayOfPokemons[indexName] && userInputHolder.current !== userInput) {
+        if (props.arrayOfPokemons[indexName] && userInputHolder.current !== userInput) {
             props.setUserInput(userInput);
             userInputHolder.current = userInput;
         }
-    }, [arrayOfPokemons, props, filteredPokemonNames]);
+    }, [props.arrayOfPokemons, props, filteredPokemonNames]);
 
     const onFilterSelection = useCallback((filterOption: string) => {
         const isTypeFilter = types.types.includes(filterOption);

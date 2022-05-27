@@ -29,7 +29,7 @@ const Filter = (props: Props) => {
     return (
         <div ref={containerRef} css={containerStyle}>
             <div css={wrapperContainerStyle(showFilters)}>
-                <div onClick={() => setShowFilters(true)}><img src={props.filters.some(filter => filter.selectedOptions.length) ? filledFilterIcon : filterIcon} alt={'filter'} /></div>
+                <div onClick={() => setShowFilters(true)} css={filterIconContainerStyle}><img src={props.filters.some(filter => filter.selectedOptions.length) ? filledFilterIcon : filterIcon} alt={'filter'} /></div>
                 {showFilters && (
                     <div>
                         {props.filters.map((filter, fIndex) => (
@@ -63,9 +63,7 @@ const wrapperContainerStyle = (isExpanded: boolean) => css`
     position: absolute;
     overflow: auto;
     max-height: 300px;
-    min-height: 45px;
     width: ${isExpanded ? 250 : 50}px;
-    padding-top: 10px;
     border-radius: 4px;
     background: white;
     color: black;
@@ -91,4 +89,11 @@ const optionContainerStyle = css`
     input {
       margin-right: 15px;  
     }
+`;
+
+const filterIconContainerStyle = css`
+    min-height: 42px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 `;

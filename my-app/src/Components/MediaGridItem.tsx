@@ -1,36 +1,58 @@
-import React, { memo } from 'react';
+import React, { memo, useMemo, useState } from 'react';
 /** @jsx jsx */
 import { jsx, css } from '@emotion/react';
 import pluralise from 'pluralize';
 
+import chevronIcon from '../icons/chevron.svg';
+
 interface ItemProps {
     header: string,
     options: string[],
+    usePagination?: boolean,
 }
 
 interface Props {
     items: ItemProps[]
 }
 
-const MediaGridItem = (props: Props) => (
-    !!props.items.length ? (
-        <div>
-            {props.items.map((item, itemIndex) => (
-                <div key={itemIndex} css={statsItemWrapperStyle}>
-                    <div css={headerStyle}>
-                        {pluralise(item.header, item.options.length)}:
+const MediaGridItem = (props: Props) => {
+    const [pageIndex, setPageIndex] = useState(0);
+
+    console.log(pageIndex)
+
+    return (
+        !!props.items.length ? (
+            <div>
+                {props.items.map((item, itemIndex) => (
+                    <div key={Math.random()} css={statsItemWrapperStyle}>
+                        <div css={headerStyle}>
+                            {pluralise(item.header, item.options.length)}:
+                        </div>
+                        <div css={statsListContainerStyle}>
+                            {console.log(item)}
+                            {item.usePagination && pageIndex * 10 >= 10 && (
+                                <div onClick={() => setPageIndex(prevState => prevState - 1)}><img src={chevronIcon} css={chevronIconStyle()} /></div>
+                            )}
+                            {item.usePagination ?
+                                item.options.slice(pageIndex * 10, (pageIndex + 1) * 10).map((option, i) =>
+                                    <div key={i} css={statsItemStyle}>{i === item.options.slice(pageIndex * 10, (pageIndex + 1) * 10).length - 1 ? option : `${option},`}</div>
+                                ) : 
+                                item.options.map((option, i) =>
+                                <div key={i} css={statsItemStyle}>{i === item.options.length - 1 ? option : `${option},`}</div>
+                            ) 
+                            }
+                            {item.usePagination && (
+                                <div onClick={() => setPageIndex(prevState => prevState + 1)}><img src={chevronIcon} css={chevronIconStyle(true)} /></div>
+                            )}
+                        </div>
                     </div>
-                    <div css={statsListContainerStyle}>
-                        {item.options.map((option, i) =>
-                            <div key={i} css={statsItemStyle}>{i === item.options.length - 1 ? option : `${option},`}</div>)}
-                    </div>
-                </div>
-            ))}
-        </div>
-    ) : (
-        <React.Fragment />
+                ))}
+            </div>
+        ) : (
+            <React.Fragment />
+        )
     )
-);
+};
 
 export default memo(MediaGridItem);
 
@@ -56,3 +78,7 @@ const statsItemStyle = css`
     margin-right: 10px;
     white-space: nowrap;
 `;
+
+const chevronIconStyle = (isNext: boolean = false) => css`
+    transform: rotate(${isNext && '-'}90deg);
+`

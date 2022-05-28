@@ -13,10 +13,7 @@ interface Props {
 }
 
 const ListGrid = (props: Props) => {
-    console.log(props.filters)
-
     const [pokemons, setPokemons] = useState<Filters>({ types: [], generations: [] });
-
     useEffect(() => {
         Object.entries(props.filters).forEach(([key, value]) => {
             if (key === 'types') {
@@ -34,8 +31,6 @@ const ListGrid = (props: Props) => {
             }
         });
     }, [props.filters])
-
-    console.log(pokemons)
     return (
         <div css={containerStyle}>
             {Object.entries(pokemons).map(([key, value]) => (

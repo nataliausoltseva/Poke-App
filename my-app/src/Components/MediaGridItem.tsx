@@ -17,9 +17,6 @@ interface Props {
 
 const MediaGridItem = (props: Props) => {
     const [pageIndex, setPageIndex] = useState(0);
-
-    console.log(pageIndex)
-
     return (
         !!props.items.length ? (
             <div>
@@ -29,7 +26,6 @@ const MediaGridItem = (props: Props) => {
                             {pluralise(item.header, item.options.length)}:
                         </div>
                         <div css={statsListContainerStyle}>
-                            {console.log(item)}
                             {item.usePagination && pageIndex * 10 >= 10 && (
                                 <div onClick={() => setPageIndex(prevState => prevState - 1)}><img src={chevronIcon} css={chevronIconStyle()} /></div>
                             )}

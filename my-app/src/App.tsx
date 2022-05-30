@@ -98,7 +98,7 @@ const App = () => {
 
             )}
           </div>
-          <MediaGrid searchInput={userInput} filters={filters} />
+          <MediaGrid searchInput={userInput} filters={filters} setSearchInput={setUserInput} />
         </>
       )}
     </div>

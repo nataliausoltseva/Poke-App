@@ -5,6 +5,7 @@ import { jsx, css } from '@emotion/react';
 
 import MediaGridItem from './MediaGridItem';
 import ProgressBar from './ProgressBar';
+import arrow from '../icons/arrow.svg';
 
 interface DefaultItemProps {
     name: string;
@@ -16,10 +17,21 @@ interface Filters {
     generations: string[]
 }
 
+interface PokemonEvolutions {
+    species: PokemonEvoSpecies,
+    evolves_to: PokemonEvolutions[]
+}
+
+interface PokemonEvoSpecies {
+    name: string,
+}
+
 interface IMediaGridProps {
     searchInput: string | null,
     filters: Filters,
+    setSearchInput: (value: string) => void,
 }
+
 
 function MediaGrid(props: IMediaGridProps) {
     const [pokemonAbilities, setPokemonAbilities] = useState<DefaultItemProps[]>([{ name: "", url: "" }])
@@ -29,6 +41,10 @@ function MediaGrid(props: IMediaGridProps) {
     const [pokeWeight, setPokeWeight] = useState(0);
     const [pokeHeight, setPokeHeight] = useState(0);
     const [pokeCaptureRate, setPokeCaptureRate] = useState(0);
+    const [evolution, setEvolution] = useState<PokemonEvolutions>();
+    const [evolutionUrl, setEvolutionUrl] = useState('');
+    const [hatchCounter, setHatchCounter] = useState(0);
+    const [habitat, setHabitat] = useState('');
 
     useEffect(() => {
         fetch('https://pokeapi.co/api/v2/pokemon/' + props.searchInput)
@@ -46,14 +62,50 @@ function MediaGrid(props: IMediaGridProps) {
             .then(response => response.json())
             .then(response => {
                 setPokeCaptureRate(response.capture_rate);
+                setHatchCounter(response.hatch_counter);
+                setHabitat(response.habitat.name);
+                setEvolutionUrl(response.evolution_chain.url);
             });
 
     }, [props]);
+
+    useEffect(() => {
+        if (evolutionUrl) {
+            fetch(evolutionUrl)
+                .then(response => response.json())
+                .then(response => {
+                    const evolutionHolder = [];
+                    const evolutionChain = response.chain;
+                    console.log(evolutionChain)
+                    setEvolution(evolutionChain);
+                    // console.log(evolutionChain);
+                    // const firstEvo = evolutionChain.species.name;
+                    // if (evolutionChain.evolves_to.length) {
+                    //     evolutionChain.evolves_to.forEach((second: { evolves_to: any[]; species: { name: string } }) => {
+                    //         const secondEvo = second.species.name;
+                    //         if (second.evolves_to.length) {
+                    //             second.evolves_to.forEach((third: { species: { name: string; }; }) => {
+                    //                 const thirdEvo = third.species.name;
+                    //                 evolutionHolder.push(`${firstEvo}→${secondEvo}→${thirdEvo}`)
+                    //             })
+                    //         } else {
+                    //             evolutionHolder.push(`${firstEvo}→${secondEvo}`)
+                    //         }
+                    //     })
+                    // } else {
+                    //     evolutionHolder.push(firstEvo)
+                    // }
+                    // console.log(evolutionHolder)
+                    // setEvolution(evolutionHolder)
+                })
+        }
+    }, [evolutionUrl])
 
     const front_default = `https://img.pokemondb.net/sprites/home/normal/${props.searchInput}.png`;
     const front_shiny = `https://img.pokemondb.net/sprites/home/shiny/${props.searchInput}.png`;
 
     // TODO need a better way to find the generation. Check API first
+    // 2nd fetch returns the generation :)
     let generationIn = "";
     for (var index = 0; index < 900; index++) {
         if (pokeID === 0 || pokeID <= 151) {
@@ -118,6 +170,9 @@ function MediaGrid(props: IMediaGridProps) {
                                     header: 'Type',
                                     options: pokemonTypes.map(type => type.name),
                                     usePagination: pokemonTypes.length > 10,
+                                }, {
+                                    header: 'Habitat',
+                                    options: [habitat]
                                 },
                                 {
                                     header: 'Height',
@@ -126,6 +181,10 @@ function MediaGrid(props: IMediaGridProps) {
                                 {
                                     header: 'Weight',
                                     options: [`${pokeWeight} kg`]
+                                },
+                                {
+                                    header: 'Walk distance',
+                                    options: [`${Math.floor((hatchCounter + 1) * 255 / 1312.33595801)} km`]
                                 },
                                 {
                                     header: 'Move',
@@ -138,10 +197,57 @@ function MediaGrid(props: IMediaGridProps) {
                             header={"Capture rate: "}
                             percentage={parseInt(percentage_rounded)}
                         />
+                        <div>
+                            <div css={headerStyle}>Evolutions:</div>
+                            {evolution && (
+                                <div css={evolutionContainerStyle}>
+                                    {/* First evolution */}
+                                    <div
+                                        css={evolutionNameStyle(evolution.species.name !== props.searchInput)}
+                                        {...evolution.species.name !== props.searchInput && {
+                                            onClick: () => props.setSearchInput(evolution.species.name)
+                                        }}
+                                    >
+                                        {evolution.species.name}
+                                    </div>
+                                    <img src={arrow} />
+                                    {/* Second evolution */}
+                                    <div>
+                                        {evolution.evolves_to.map((sEvo, sIndex) => (
+                                            <div css={secondEvolutionContainerStyle} key={sIndex}>
+                                                <div
+                                                    css={evolutionNameStyle(sEvo.species.name !== props.searchInput)}
+                                                    {...sEvo.species.name !== props.searchInput && {
+                                                        onClick: () => props.setSearchInput(sEvo.species.name)
+                                                    }}
+                                                >
+                                                    {sEvo.species.name}
+                                                </div>
+                                                {!!sEvo.evolves_to.length && (
+                                                    <img src={arrow} />
+                                                )}
+                                                {/* Third evolution */}
+                                                {sEvo.evolves_to.map((tEvo, tIndex) => (
+                                                    <div
+                                                        key={tIndex}
+                                                        css={evolutionNameStyle(tEvo.species.name !== props.searchInput)}
+                                                        {...tEvo.species.name !== props.searchInput && {
+                                                            onClick: () => props.setSearchInput(tEvo.species.name)
+                                                        }}
+                                                    >
+                                                        {tEvo.species.name}
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
-            </React.Fragment>
-        </div>
+            </React.Fragment >
+        </div >
     );
 }
 
@@ -179,4 +285,32 @@ const cardHeaderStyle = css`
 
 const statsContainerStyle = css`
     width: 50%;
+`;
+
+const headerStyle = css`
+    font-size: 2.5vh;
+    text-decoration: underline;
+    margin-right: 10px;
+`;
+
+const evolutionContainerStyle = css`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`;
+
+const secondEvolutionContainerStyle = css`
+    display: flex;
+`;
+
+const evolutionNameStyle = (isClickable: boolean = false) => css`
+    ${isClickable ? css`    
+        cursor: pointer;
+        transition: transform 200ms ease-in-out;
+        :hover {
+            transform: scale(1.1)
+        }
+    ` :  css`    
+        text-decoration: underline;
+    `}
 `;

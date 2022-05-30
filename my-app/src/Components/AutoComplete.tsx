@@ -114,6 +114,7 @@ const containerStyle = css`
 
 const suggestionsContainerStyle = css`
     position: absolute;
+    z-index: 1;
     overflow: auto;
     max-height: 300px;
     min-height: 45px;

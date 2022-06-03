@@ -77,6 +77,13 @@ const App = () => {
     }
   }, [genHolder])
 
+  useEffect(() => {
+    if (darkMode) {
+      document.body.style.background = "#5a4f7c";
+      document.body.style.color = "white";
+    }
+  }, [darkMode]);
+
   const onNextPokemon = useCallback(() => {
     // Get current => get next pokemon after current
     const currentIndex = arrayOfPokemons.indexOf(arrayOfPokemons.find(p => p.name === userInput));
@@ -96,7 +103,7 @@ const App = () => {
   }, [arrayOfPokemons, userInput]);
 
   return (
-    <div css={container(darkMode)}>
+    <div css={container}>
       <Header onDarkMode={setDarkMode} onPokedox={setShowListView} isListView={showListView} />
       {!showListView && (<SearchBar setUserInput={setUserInput} darkMode={darkMode} onFilterSelection={setFilters} arrayOfPokemons={arrayOfPokemons} /> )}
       {Object.values(filters).flat().length ? (
@@ -146,13 +153,9 @@ const App = () => {
 
 export default App;
 
-const container = (darkMode: boolean) => css`
+const container = css`
   text-align: center;
   height: 100vh;
-  ${darkMode && css`
-    background: #5a4f7c;
-    color: white;
-  `};
 `;
 
 const pokemonNavigationContainerStyle = css`

@@ -81,6 +81,9 @@ const App = () => {
     if (darkMode) {
       document.body.style.background = "#5a4f7c";
       document.body.style.color = "white";
+    } else {
+      document.body.style.background = "white";
+      document.body.style.color = "black";
     }
   }, [darkMode]);
 

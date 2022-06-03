@@ -9,7 +9,7 @@ interface Filters {
 
 interface Props {
     filters: Filters,
-    setUserInput: (value: string) => void
+    setUserInput: (value: string) => void,
 }
 
 const ListGrid = (props: Props) => {

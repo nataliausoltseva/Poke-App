@@ -1,13 +1,17 @@
 import React, { memo, useCallback, useEffect, useState } from 'react';
-import Moon from '../icons/moon.svg';
-import Sun from '../icons/sun.svg';
 /** @jsx jsx */
 import { jsx, css } from '@emotion/react';
+import { Tooltip } from 'react-tippy';
 
 import TopBar from './TopBar';
+import pokeball from '../icons/pokeball.svg';
+import Moon from '../icons/moon.svg';
+import Sun from '../icons/sun.svg';
 
 interface Props {
   onDarkMode: (value: boolean) => void;
+  onPokedox: (value: boolean) => void;
+  isListView: boolean;
 }
 
 const Header = (props: Props) => {
@@ -37,6 +41,7 @@ const Header = (props: Props) => {
   return (
     <div css={appBarStyles(darkModeSwitch)}>
       <TopBar>
+        <Tooltip title="Toggle Views" position="bottom"><img src={pokeball} onClick={() => props.onPokedox(!props.isListView)}/></Tooltip>
         <div css={switcherContaineryStyle} onClick={handleSwitch}>
           <input type="checkbox" css={checkboxStyle} />
           <span css={sliderStyle(darkModeSwitch)} />

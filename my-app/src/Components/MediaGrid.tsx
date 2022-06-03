@@ -74,29 +74,9 @@ function MediaGrid(props: IMediaGridProps) {
             fetch(evolutionUrl)
                 .then(response => response.json())
                 .then(response => {
-                    const evolutionHolder = [];
                     const evolutionChain = response.chain;
                     console.log(evolutionChain)
                     setEvolution(evolutionChain);
-                    // console.log(evolutionChain);
-                    // const firstEvo = evolutionChain.species.name;
-                    // if (evolutionChain.evolves_to.length) {
-                    //     evolutionChain.evolves_to.forEach((second: { evolves_to: any[]; species: { name: string } }) => {
-                    //         const secondEvo = second.species.name;
-                    //         if (second.evolves_to.length) {
-                    //             second.evolves_to.forEach((third: { species: { name: string; }; }) => {
-                    //                 const thirdEvo = third.species.name;
-                    //                 evolutionHolder.push(`${firstEvo}→${secondEvo}→${thirdEvo}`)
-                    //             })
-                    //         } else {
-                    //             evolutionHolder.push(`${firstEvo}→${secondEvo}`)
-                    //         }
-                    //     })
-                    // } else {
-                    //     evolutionHolder.push(firstEvo)
-                    // }
-                    // console.log(evolutionHolder)
-                    // setEvolution(evolutionHolder)
                 })
         }
     }, [evolutionUrl])

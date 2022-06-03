@@ -11,7 +11,7 @@ const Loading = () => {
 
 export default Loading;
 
-const styles = css`    .lds-roller {
+const styles = css`
   display: inline-block;
   position: relative;
   width: 80px;

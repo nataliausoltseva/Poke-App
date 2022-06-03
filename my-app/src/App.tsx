@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect, useRef } from 'react';
+import React, { useCallback, useState, useEffect, useRef, isValidElement } from 'react';
 /** @jsx jsx */
 import { jsx, css } from '@emotion/react';
 import { Tooltip } from 'react-tippy';
@@ -8,6 +8,7 @@ import MediaGrid from './Components/MediaGrid';
 import Header from './Components/Header';
 import ListGrid from './Components/ListGrid';
 import chevron from './icons/chevron.svg';
+import Pokedox from './Components/Pokedox';
 
 interface Filters {
   types: string[],
@@ -26,6 +27,10 @@ const App = () => {
   const [numPokemons, setNumPokemons] = useState(0);
   const [arrayOfPokemons, setArrayOfPokemons] = useState<PokemonsArray[] | any[]>([]);
   const [pokemonIndex, setPokemonIndex] = useState(0);
+  const [showListView, setShowListView] = useState(false);
+  const [genData, setGenData] = useState<any[]>([]);
+  const [genHolder, setGenHolder] = useState<any[]>([]);
+
 
   const handleDataFromList = useCallback((pokemonName) => {
     setUserInput(pokemonName);
@@ -49,6 +54,29 @@ const App = () => {
     }
   }, [numPokemons]);
 
+  useEffect(() => {
+    fetch("https://pokeapi.co/api/v2/generation")
+      .then(response => response.json())
+      .then(data => {
+        setGenHolder(data.results);
+      });
+  }, []);
+
+
+  useEffect(() => {
+    if (genHolder.length) {
+      Promise.all(
+        genHolder.map(gen =>
+          fetch(gen.url)
+            .then(res => res.json())
+        )
+      ).then(data => {
+        console.log(data)
+        setGenData(data)
+      });
+    }
+  }, [genHolder])
+
   const onNextPokemon = useCallback(() => {
     // Get current => get next pokemon after current
     const currentIndex = arrayOfPokemons.indexOf(arrayOfPokemons.find(p => p.name === userInput));
@@ -69,36 +97,47 @@ const App = () => {
 
   return (
     <div css={container(darkMode)}>
-      <Header onDarkMode={setDarkMode} />
-      <SearchBar setUserInput={setUserInput} darkMode={darkMode} onFilterSelection={setFilters} arrayOfPokemons={arrayOfPokemons} />
+      <Header onDarkMode={setDarkMode} onPokedox={setShowListView} isListView={showListView} />
+      {!showListView && (<SearchBar setUserInput={setUserInput} darkMode={darkMode} onFilterSelection={setFilters} arrayOfPokemons={arrayOfPokemons} /> )}
       {Object.values(filters).flat().length ? (
-        <ListGrid filters={filters} setUserInput={handleDataFromList} />
+        <ListGrid
+          filters={filters}
+          setUserInput={handleDataFromList}
+        />
       ) : (
         <>
-          <div css={pokemonNavigationContainerStyle(userInput !== "bulbasaur")}>
-            {!!pokemonIndex && (
-              <Tooltip
-                title="Next pokemon"
-                position="bottom"
-              >
-                <div onClick={onPrevPokemon}><img src={chevron} css={chevronStyle()} /></div>
-              </Tooltip>
-            )}
-            <span>Pokemon navigation</span>
-            {(pokemonIndex < arrayOfPokemons.length) && (
-              <Tooltip
-                title="Next pokemon"
-                position="bottom"
-              >
-                <div onClick={onNextPokemon}>
+          {showListView ? (
+            <Pokedox
+              generationData={genData}
+            />
+          ) : (
+            <>
+              <div css={pokemonNavigationContainerStyle}>
+                {!!pokemonIndex && (
+                  <Tooltip
+                    title="Previous pokemon"
+                    position="bottom"
+                  >
+                    <div onClick={onPrevPokemon}><img src={chevron} css={chevronStyle()} /></div>
+                  </Tooltip>
+                )}
+                <span>Pokemon navigation</span>
+                {(pokemonIndex < arrayOfPokemons.length) && (
+                  <Tooltip
+                    title="Next pokemon"
+                    position="bottom"
+                  >
+                    <div onClick={onNextPokemon}>
 
-                  <img src={chevron} css={chevronStyle(true)} />
-                </div>
-              </Tooltip>
+                      <img src={chevron} css={chevronStyle(true)} />
+                    </div>
+                  </Tooltip>
 
-            )}
-          </div>
-          <MediaGrid searchInput={userInput} filters={filters} setSearchInput={setUserInput} />
+                )}
+              </div>
+              <MediaGrid searchInput={userInput} filters={filters} setSearchInput={setUserInput} />
+            </>
+          )}
         </>
       )}
     </div>
@@ -116,7 +155,7 @@ const container = (darkMode: boolean) => css`
   `};
 `;
 
-const pokemonNavigationContainerStyle = (canGoBack: boolean = false) => css`
+const pokemonNavigationContainerStyle = css`
     display: flex;
     width: 100%;
     justify-content: center;

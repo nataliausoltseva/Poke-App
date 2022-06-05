@@ -114,11 +114,12 @@ const App = () => {
 
   return (
     <div css={container}>
+      <Header onDarkMode={setDarkMode} onPokedox={setShowListView} isListView={showListView} isLoading={isLoading} />
       {isLoading ? (
         <Loading />
       ) : (
         <>
-          <Header onDarkMode={setDarkMode} onPokedox={setShowListView} isListView={showListView} />
+
           {!showListView && (<SearchBar setUserInput={setUserInput} darkMode={darkMode} onFilterSelection={setFilters} arrayOfPokemons={arrayOfPokemons} />)}
           {Object.values(filters).flat().length ? (
             <ListGrid
@@ -172,7 +173,6 @@ export default App;
 
 const container = css`
   text-align: center;
-  height: 100vh;
 `;
 
 const pokemonNavigationContainerStyle = css`

@@ -51,8 +51,8 @@ const SearchBar = (props: ISearchBarProps) => {
     const onSubmit = useCallback((userInput) => {
         const indexName = filteredPokemonNames.findIndex(name => name === userInput);
         if (props.arrayOfPokemons[indexName] && userInputHolder.current !== userInput) {
-            props.setUserInput(userInput);
-            userInputHolder.current = userInput;
+            props.setUserInput(props.arrayOfPokemons[indexName].name);
+            userInputHolder.current = props.arrayOfPokemons[indexName].name;
         }
     }, [props.arrayOfPokemons, props, filteredPokemonNames]);
 

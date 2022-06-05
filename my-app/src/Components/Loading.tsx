@@ -5,26 +5,28 @@ import { jsx, css } from '@emotion/react';
 
 const Loading = () => {
     return (
-        <div css={styles}><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+        <div css={styles} />
     )
 }
 
 export default Loading;
 
 const styles = css`
-  display: inline-block;
-  position: relative;
-  width: 80px;
-  height: 80px;
+    border: 16px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 16px solid #3498db;
+    width: 120px;
+    height: 120px;
+    -webkit-animation: spin 2s linear infinite; /* Safari */
+    animation: spin 2s linear infinite;
 
- div {
-  animation: lds-roller 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-  transform-origin: 40px 40px;
+    @-webkit-keyframes spin {
+        0% { -webkit-transform: rotate(0deg); }
+        100% { -webkit-transform: rotate(360deg); }
+    }
 
-    :after {
-    content: " ";
-    display: block;
-    position: absolute;
-    width: 7px;
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
     }
 `;

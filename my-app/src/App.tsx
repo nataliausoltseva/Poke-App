@@ -9,6 +9,7 @@ import Header from './Components/Header';
 import ListGrid from './Components/ListGrid';
 import chevron from './icons/chevron.svg';
 import Pokedox from './Components/Pokedox';
+import Loading from './Components/Loading';
 
 interface Filters {
   types: string[],
@@ -30,6 +31,7 @@ const App = () => {
   const [showListView, setShowListView] = useState(false);
   const [genData, setGenData] = useState<any[]>([]);
   const [genHolder, setGenHolder] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
 
   const handleDataFromList = useCallback((pokemonName) => {
@@ -39,7 +41,7 @@ const App = () => {
 
   // going to query all pokemons data so can use that for filters and dont need to query their data again
   useEffect(() => {
-    fetch('https://pokeapi.co/api/v2/pokemon')
+    fetch('https://pokeapi.co/api/v2/pokemon-species')
       .then(response => response.json())
       .then(data => setNumPokemons(data.count));
   }, []);
@@ -71,7 +73,6 @@ const App = () => {
             .then(res => res.json())
         )
       ).then(data => {
-        console.log(data)
         setGenData(data)
       });
     }
@@ -87,12 +88,17 @@ const App = () => {
     }
   }, [darkMode]);
 
+  useEffect(() => {
+    setTimeout(() => setIsLoading(false), 300);
+  }, [isLoading]);
+
   const onNextPokemon = useCallback(() => {
     // Get current => get next pokemon after current
     const currentIndex = arrayOfPokemons.indexOf(arrayOfPokemons.find(p => p.name === userInput));
     if (currentIndex + 1 <= arrayOfPokemons.length - 1) {
       setUserInput(arrayOfPokemons[currentIndex + 1].name)
       setPokemonIndex(prevState => ++prevState);
+      setIsLoading(true);
     }
   }, [arrayOfPokemons, userInput]);
 
@@ -102,54 +108,62 @@ const App = () => {
     if (currentIndex - 1 >= 0) {
       setUserInput(arrayOfPokemons[currentIndex - 1].name)
       setPokemonIndex(prevState => --prevState);
+      setIsLoading(true);
     }
   }, [arrayOfPokemons, userInput]);
 
   return (
     <div css={container}>
-      <Header onDarkMode={setDarkMode} onPokedox={setShowListView} isListView={showListView} />
-      {!showListView && (<SearchBar setUserInput={setUserInput} darkMode={darkMode} onFilterSelection={setFilters} arrayOfPokemons={arrayOfPokemons} /> )}
-      {Object.values(filters).flat().length ? (
-        <ListGrid
-          filters={filters}
-          setUserInput={handleDataFromList}
-        />
+      {isLoading ? (
+        <Loading />
       ) : (
         <>
-          {showListView ? (
-            <Pokedox
-              generationData={genData}
+          <Header onDarkMode={setDarkMode} onPokedox={setShowListView} isListView={showListView} />
+          {!showListView && (<SearchBar setUserInput={setUserInput} darkMode={darkMode} onFilterSelection={setFilters} arrayOfPokemons={arrayOfPokemons} />)}
+          {Object.values(filters).flat().length ? (
+            <ListGrid
+              filters={filters}
+              setUserInput={handleDataFromList}
             />
           ) : (
             <>
-              <div css={pokemonNavigationContainerStyle}>
-                {!!pokemonIndex && (
-                  <Tooltip
-                    title="Previous pokemon"
-                    position="bottom"
-                  >
-                    <div onClick={onPrevPokemon}><img src={chevron} css={chevronStyle()} /></div>
-                  </Tooltip>
-                )}
-                <span>Pokemon navigation</span>
-                {(pokemonIndex < arrayOfPokemons.length) && (
-                  <Tooltip
-                    title="Next pokemon"
-                    position="bottom"
-                  >
-                    <div onClick={onNextPokemon}>
+              {showListView ? (
+                <Pokedox
+                  generationData={genData}
+                />
+              ) : (
+                <>
+                  <div css={pokemonNavigationContainerStyle}>
+                    {!!pokemonIndex && (
+                      <Tooltip
+                        title="Previous pokemon"
+                        position="bottom"
+                      >
+                        <div onClick={onPrevPokemon}><img src={chevron} css={chevronStyle()} /></div>
+                      </Tooltip>
+                    )}
+                    <span>Pokemon navigation</span>
+                    {(pokemonIndex < arrayOfPokemons.length) && (
+                      <Tooltip
+                        title="Next pokemon"
+                        position="bottom"
+                      >
+                        <div onClick={onNextPokemon}>
 
-                      <img src={chevron} css={chevronStyle(true)} />
-                    </div>
-                  </Tooltip>
+                          <img src={chevron} css={chevronStyle(true)} />
+                        </div>
+                      </Tooltip>
 
-                )}
-              </div>
-              <MediaGrid searchInput={userInput} filters={filters} setSearchInput={setUserInput} />
+                    )}
+                  </div>
+                  <MediaGrid searchInput={userInput} filters={filters} setSearchInput={setUserInput} pokemonIndex={arrayOfPokemons.findIndex(p => p.name === userInput) + 1} />
+                </>
+              )}
             </>
           )}
         </>
       )}
+
     </div>
   );
 }

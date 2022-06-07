@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 /** @jsx jsx */
 import { jsx, css } from '@emotion/react';
 import { Tooltip } from 'react-tippy';
@@ -11,14 +11,25 @@ interface Props {
 
 const Pokedox = (props: Props) => {
     const [pokedoxIndex, setPokedoxIndex] = useState(0);
-    const [genPokemon, setGenPokemon] = useState<any[]>([])
+    const [genPokemon, setGenPokemon] = useState<any[]>([]);
+
     useEffect(() => {
         if (props.generationData.length) {
             Promise.all(
-                props.generationData[pokedoxIndex].pokemon_species.map((pokemon: { name: string }) =>
-                    fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon.name}`)
-                        .then(res => res.json())
-                )
+                props.generationData[pokedoxIndex].pokemon_species
+                    .sort((p1: {
+                        url: any; match: (arg0: RegExp) => any[];
+                    }, p2: {
+                        url: any; match: (arg0: RegExp) => any[];
+                    }) => {
+                        let _p1 = Number(p1.url.match(/https:\/\/pokeapi\.co\/api\/v2\/pokemon-species\/(.*)\//)[1])
+                        let _p2 = Number(p2.url.match(/https:\/\/pokeapi\.co\/api\/v2\/pokemon-species\/(.*)\//)[1])
+                        return _p1 < _p2 ? -1 : _p1 > _p2 ? 1 : 0
+                    })
+                    .map((pokemon: { name: string }) =>
+                        fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon.name}`)
+                            .then(res => res.json())
+                    )
             ).then(data => {
                 setGenPokemon(data)
             });
@@ -26,7 +37,7 @@ const Pokedox = (props: Props) => {
     }, [pokedoxIndex, props.generationData]);
 
     return (
-        <div>
+        <div css={containerStyle}>
             <div css={generationLabelStyle}>{props.generationData[pokedoxIndex].main_region.name}</div>
             <div css={paginationContainerStyle(!!pokedoxIndex)}>
                 {!!pokedoxIndex && (
@@ -54,11 +65,19 @@ const Pokedox = (props: Props) => {
             </div>
             <div css={pokemonContainerStyle}>
                 {genPokemon.map((pokemon, pokemonIndex) => (
-                    <div key={pokemonIndex}>
-                        <img src={`https://img.pokemondb.net/sprites/home/normal/${pokemon.name}.png`} alt="Pokemon's normal form" />
-                        <div css={pokemonNameStyle}>{pokemon.name}</div>
-                        <div css={typesContainerStyle}>
-                            {pokemon.types.map((type: { type: { name: string; }; }) => type.type.name).join(', ')}
+                    <div key={pokemonIndex} css={pokeCardStyle}>
+                        <div css={innerStyle}>
+                            <div css={frontCardStyle}>
+                                <div>#{pokemonIndex + 1}</div>
+                                <img src={`https://img.pokemondb.net/sprites/home/normal/${pokemon.name}.png`} alt="Pokemon's normal form" />
+                                <div css={pokemonNameStyle}>{pokemon.name}</div>
+                                <div css={typesContainerStyle}>
+                                    {pokemon.types.map((type: { type: { name: string; }; }) => type.type.name).join(', ')}
+                                </div>
+                            </div>
+                            <div css={backCardStyle}>
+                                Something else
+                            </div>
                         </div>
                     </div>
                 ))}
@@ -69,9 +88,14 @@ const Pokedox = (props: Props) => {
 
 export default Pokedox;
 
+const containerStyle = css`
+    margin: 0 10px;
+`;
+
 const pokemonContainerStyle = css`
     display: flex;
     flex-wrap: wrap;
+    justify-content: space-evenly;
 `;
 
 const pokemonNameStyle = css`
@@ -105,4 +129,39 @@ const paginationContainerStyle = (canGoBack: boolean) => css`
 
 const chevronStyle = (isNext: boolean = false) => css`
   transform: rotate(${isNext && '-'}90deg);
+`;
+
+const pokeCardStyle = css`
+    box-shadow: 0px 0px 4px 0px black;
+    border-radius: 12px;
+    min-width: 150px;
+    margin-bottom: 20px;
+    perspective: 1000px;
+
+    :hover {
+        > div {
+            transform: rotateY(180deg);
+        }
+    }
+`;
+
+const innerStyle = css`
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+`;
+
+const frontCardStyle = css`
+backface-visibility: hidden;
+`;
+
+const backCardStyle = css`
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transform: rotateY(180deg);
+    backface-visibility: hidden;
 `;

@@ -12,6 +12,7 @@ interface Props {
   onDarkMode: (value: boolean) => void;
   onPokedox: (value: boolean) => void;
   isListView: boolean;
+  isLoading: boolean;
 }
 
 const Header = (props: Props) => {
@@ -41,13 +42,15 @@ const Header = (props: Props) => {
   return (
     <div css={appBarStyles(darkModeSwitch)}>
       <TopBar>
-        <Tooltip title="Toggle Views" position="bottom"><img src={pokeball} onClick={() => props.onPokedox(!props.isListView)}/></Tooltip>
+        <Tooltip title="Toggle Views" position="bottom"><img src={pokeball} onClick={() => props.onPokedox(!props.isListView)} /></Tooltip>
         <div css={switcherContaineryStyle} onClick={handleSwitch}>
           <input type="checkbox" css={checkboxStyle} />
           <span css={sliderStyle(darkModeSwitch)} />
-          <div css={lightModeIconStyle(darkModeSwitch)}>
-            <img src={darkModeSwitch ? Moon : Sun} css={iconStyle(darkModeSwitch)} alt={'darkmodeSwitch'} />
-          </div>
+          {!props.isLoading && (
+            <div css={lightModeIconStyle(darkModeSwitch)}>
+              <img src={darkModeSwitch ? Moon : Sun} css={iconStyle(darkModeSwitch)} alt={'darkmodeSwitch'} />
+            </div>
+          )}
         </div>
       </TopBar>
     </div>

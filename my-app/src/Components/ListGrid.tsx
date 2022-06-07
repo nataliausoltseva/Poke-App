@@ -36,7 +36,6 @@ const ListGrid = (props: Props) => {
             {Object.entries(pokemons).map(([key, value]) => (
                 !!Object.values(value).length && (
                     <div key={key}>
-                        {console.log(value)}
                         <div css={filterKeyLabelStyle}>{key}</div>
                         <div>
                             {Object.keys(value).map(k => (

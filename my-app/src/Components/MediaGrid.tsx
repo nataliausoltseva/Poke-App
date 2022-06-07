@@ -1,4 +1,4 @@
-import React, { useState, useEffect, memo } from 'react';
+import React, { useState, useEffect, memo, useMemo } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 /** @jsx jsx */
 import { jsx, css } from '@emotion/react';
@@ -30,6 +30,18 @@ interface IMediaGridProps {
     searchInput: string | null,
     filters: Filters,
     setSearchInput: (value: string) => void,
+    pokemonIndex: number,
+}
+
+const GENERATIONS:any = {
+    1: 'Kanto',
+    2: 'Johto',
+    3: 'Hoenn',
+    4: 'Sinnoh',
+    5: 'Unova',
+    6: 'Kalos',
+    7: 'Alola',
+    8: 'Galar'
 }
 
 
@@ -45,6 +57,7 @@ function MediaGrid(props: IMediaGridProps) {
     const [evolutionUrl, setEvolutionUrl] = useState('');
     const [hatchCounter, setHatchCounter] = useState(0);
     const [habitat, setHabitat] = useState('');
+    const [generationIn, setGenerationIn] = useState('');
 
     useEffect(() => {
         fetch('https://pokeapi.co/api/v2/pokemon/' + props.searchInput)
@@ -53,18 +66,21 @@ function MediaGrid(props: IMediaGridProps) {
                 setPokemonAbilities(response.abilities.map((ability: { ability: DefaultItemProps }) => ability.ability));
                 setPokemonTypes(response.types.map((type: { type: DefaultItemProps }) => type.type));
                 setPokemonMoves(response.moves.map((move: { move: DefaultItemProps }) => move.move));
-                setPokeID(response.id);
                 setPokeHeight(response.height / 10);
                 setPokeWeight(response.weight / 10);
+                console.log(response)
             });
 
-        fetch('https://pokeapi.co/api/v2/pokemon-species/' + props.searchInput)
+        fetch('https://pokeapi.co/api/v2/pokemon-species/' + props.pokemonIndex)
             .then(response => response.json())
             .then(response => {
+                console.log(response)
                 setPokeCaptureRate(response.capture_rate);
                 setHatchCounter(response.hatch_counter);
-                setHabitat(response.habitat.name);
+                setHabitat(response.habitat?.name);
                 setEvolutionUrl(response.evolution_chain.url);
+                setGenerationIn(GENERATIONS[response.generation.url.match(/https:\/\/pokeapi\.co\/api\/v2\/generation\/(.*)\//)[1]]);
+                setPokeID(response.pokedex_numbers.find((p: { pokedex: { name: string; }; }) => p.pokedex.name === 'national').entry_number)
             });
 
     }, [props]);
@@ -75,7 +91,6 @@ function MediaGrid(props: IMediaGridProps) {
                 .then(response => response.json())
                 .then(response => {
                     const evolutionChain = response.chain;
-                    console.log(evolutionChain)
                     setEvolution(evolutionChain);
                 })
         }
@@ -83,36 +98,6 @@ function MediaGrid(props: IMediaGridProps) {
 
     const front_default = `https://img.pokemondb.net/sprites/home/normal/${props.searchInput}.png`;
     const front_shiny = `https://img.pokemondb.net/sprites/home/shiny/${props.searchInput}.png`;
-
-    // TODO need a better way to find the generation. Check API first
-    // 2nd fetch returns the generation :)
-    let generationIn = "";
-    for (var index = 0; index < 900; index++) {
-        if (pokeID === 0 || pokeID <= 151) {
-            generationIn = "Kanto";
-        }
-        else if (pokeID >= 152 || pokeID <= 251) {
-            generationIn = "Johto";
-        }
-        else if (pokeID >= 252 || pokeID <= 386) {
-            generationIn = "Hoenn";
-        }
-        else if (pokeID >= 287 || pokeID <= 493) {
-            generationIn = "Sinnoh";
-        }
-        else if (pokeID >= 494 || pokeID <= 649) {
-            generationIn = "Unova";
-        }
-        else if (pokeID >= 650 || pokeID <= 721) {
-            generationIn = "Kalos";
-        }
-        else if (pokeID >= 722 || pokeID <= 809) {
-            generationIn = "Alola";
-        }
-        else if (pokeID >= 810) {
-            generationIn = "Galar";
-        }
-    }
 
     const percentage_rounded = (Math.round(pokeCaptureRate * 100 / 255).toFixed(0));
 
@@ -150,10 +135,11 @@ function MediaGrid(props: IMediaGridProps) {
                                     header: 'Type',
                                     options: pokemonTypes.map(type => type.name),
                                     usePagination: pokemonTypes.length > 10,
-                                }, {
+                                },
+                                ...habitat ? [{
                                     header: 'Habitat',
                                     options: [habitat]
-                                },
+                                }] : [],
                                 {
                                     header: 'Height',
                                     options: [`${pokeHeight} m`]
@@ -290,7 +276,7 @@ const evolutionNameStyle = (isClickable: boolean = false) => css`
         :hover {
             transform: scale(1.1)
         }
-    ` :  css`    
+    ` : css`    
         text-decoration: underline;
     `}
 `;

@@ -12,7 +12,7 @@ type colourOptions = {
 }
 
 const PROGRESS_COLOURS: colourOptions = {
-    0: "#9ecbf599",
+    0: "#9ecbf5",
     20: "#9ecae1",
     40: "#6baed6",
     60: "#3182bd",
@@ -36,9 +36,10 @@ const ProgressBar = (props: Props) => {
                 {props.header}
             </div>
             <div css={containerStyle}>
-                <div css={fillerStyle(props.percentage, colour)}>
-                    <span css={labelStyle}>{props.percentage}%</span>
+                <div css={progressBarContainerStyle}>
+                    <div css={fillerStyle(props.percentage, colour)} />
                 </div>
+                <div css={labelStyle}>{props.percentage}%</div>
             </div>
         </div>
     );
@@ -47,11 +48,16 @@ const ProgressBar = (props: Props) => {
 export default ProgressBar;
 
 const containerStyle = css`
-    height: 20;
+    height: 100%;
+    width: 100%;
+    display: flex;
+`;
+
+const progressBarContainerStyle = css`
+    height: 20px;
     width: 100%;
     background-color: #e0e0de;
-    border-radius: 50;
-    margin: 50;
+    border-radius: 10px;
 `;
 
 const headerStyle = css`
@@ -66,12 +72,13 @@ const fillerStyle = (percentage: number, colour: string) => css`
     background-color: ${colour};
     border-radius: inherit;
     text-align: right;
+    text-align: center;
+    align-items: center;
+    display: flex;
 
     transition: width 1s ease-in-out,
 `;
 
 const labelStyle = css`
-    padding: 5;
-    color: white;
-    font-weight: bold;
+    font-size: 14px;
 `;

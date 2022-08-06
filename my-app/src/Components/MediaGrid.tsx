@@ -33,7 +33,7 @@ interface IMediaGridProps {
     pokemonIndex: number,
 }
 
-const GENERATIONS:any = {
+const GENERATIONS: any = {
     1: 'Kanto',
     2: 'Johto',
     3: 'Hoenn',
@@ -111,14 +111,17 @@ function MediaGrid(props: IMediaGridProps) {
                 </div>
                 <div css={pokemonInfoWrapperStyle}>
                     <div css={imageCardsContainerStyle}>
-                        <img src={front_default} alt="Pokemon's normal form" />
-                        <div css={cardHeaderStyle}>
-                            {props.searchInput}'s Normal Form
+                        <div>
+                            <img src={front_default} alt="Pokemon's normal form" />
+                            <div css={cardHeaderStyle}>
+                                {props.searchInput}'s Normal Form
+                            </div>
                         </div>
-                        <br />
-                        <img src={front_shiny} alt="Pokemon's shiny form" />
-                        <div css={cardHeaderStyle}>
-                            {props.searchInput}'s Shiny Form
+                        <div>
+                            <img src={front_shiny} alt="Pokemon's shiny form" />
+                            <div css={cardHeaderStyle}>
+                                {props.searchInput}'s Shiny Form
+                            </div>
                         </div>
                     </div>
                     <br />
@@ -221,11 +224,17 @@ function MediaGrid(props: IMediaGridProps) {
 export default memo(MediaGrid);
 
 const containerStyle = css`
-    margin-left: 10px
+    margin: 0 10px;
 `;
 
 const pokemonNameContainerStyle = css`
     text-align: left;
+
+    @media (max-width: 768px) {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
 `;
 
 const pokemonNameStyle = css`
@@ -234,6 +243,10 @@ const pokemonNameStyle = css`
 
 const pokemonInfoWrapperStyle = css`
     display: flex;
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+    }
 `;
 
 const imageCardsContainerStyle = css`
@@ -242,6 +255,12 @@ const imageCardsContainerStyle = css`
     align-items: center;
     justify-content: space-space-evenly;
     margin-right: 2em;
+
+    @media (max-width: 768px) {
+        flex-direction: row;
+        margin-right: 0;
+        justify-content: center;
+    }
 `;
 
 const cardHeaderStyle = css`
@@ -251,6 +270,13 @@ const cardHeaderStyle = css`
 
 const statsContainerStyle = css`
     width: 50%;
+
+    @media (max-width: 768px) {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        flex-wrap: wrap;
+    }
 `;
 
 const headerStyle = css`

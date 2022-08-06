@@ -14,11 +14,9 @@ const Loading = () => {
 export default Loading;
 
 const containerStyle = css`
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
 `;
 
 const styles = css`
